@@ -17,19 +17,18 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "./Base64.sol";
 import "hardhat/console.sol";
 
-
 contract YourContract is ERC721Enumerable, Ownable {
     using Strings for uint256;
     bool public paused = false;
-    mapping(uint256 => Message) public idToMessage;
-    mapping(address => bool) public optOut;
+    mapping(address => Message) public addressToMessage;
     uint256 public stringLimit = 280; //like a tweet
     uint256 fee = 0;
-    enum messageStatus {active, read, deleted, archived }
+    //enum messageStatus {active, read, deleted, archived }
 
     struct Message {
         string value;
-        messageStatus status;
+        bool optOut;
+        //messageStatus status;
         address sender;
     }
 
@@ -40,7 +39,7 @@ contract YourContract is ERC721Enumerable, Ownable {
         uint256 supply = totalSupply();
         bytes memory strBytes = bytes(_userText);
         require(strBytes.length <= stringLimit, "String input exceeds limit.");
-        require(optOut[_to] == false, "User has opted out of receiving messasges");
+        require(Message[_to].optOut == false, "User has opted out of receiving messasges");
 
         Message memory newMessage = Message(
             _userText,
@@ -52,7 +51,7 @@ contract YourContract is ERC721Enumerable, Ownable {
             require(msg.value >= fee);
         }
 
-        idToMessage[supply + 1] = newMessage; //Add word to mapping @tokenId
+        addressToMessage[supply + 1] = newMessage; //Add word to mapping @tokenId
         _safeMint(_to, supply + 1);
     }
 
@@ -60,12 +59,12 @@ contract YourContract is ERC721Enumerable, Ownable {
         fee =  _fee;
     }
 
-    function updateMessageStatus(uint _tokenId, uint _status) public {
-        idToMessage[_tokenId].status = _status;    
+    function optOut(bool _value) public {
+        Message[msg.sender].optOut = _value;
     }
 
     function buildImage(uint256 _tokenId) private view returns (string memory) {
-        Message memory currentMessage = idToMessage[_tokenId];
+        Message memory currentMessage = addressToMessage[owner_of(_tokenId)].value;
         string memory owner = toAsciiString(currentMessage.sender);
         // build address abbreviation as user name, ex 0xf39...2266
         owner = string(abi.encodePacked(
