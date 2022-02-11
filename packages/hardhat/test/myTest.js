@@ -19,12 +19,18 @@ describe("My Dapp", function () {
       myContract = await YourContract.deploy();
     });
 
-    describe("setPurpose()", function () {
-      it("Should be able to set a new purpose", async function () {
-        const newPurpose = "Test Purpose";
+    describe("mint()", function () {
+      it("Should be able to mint a new NFT", async function () {
+        const newPurpose = "Hello World";
+        const [owner] = await ethers.getSigners();
 
-        await myContract.setPurpose(newPurpose);
-        expect(await myContract.purpose()).to.equal(newPurpose);
+        expect(await myContract.totalSupply()).to.equal(0);
+
+        await myContract.mint(owner.address, newPurpose);
+        expect(await myContract.totalSupply()).to.equal(1);
+
+        const URI = await myContract.tokenURI(1);
+
       });
 
       // Uncomment the event and emit lines in YourContract.sol to make this test pass
