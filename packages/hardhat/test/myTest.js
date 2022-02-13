@@ -24,12 +24,12 @@ describe("My Dapp", function () {
         const newPurpose = "Hello World";
         const [owner] = await ethers.getSigners();
 
-        expect(await myContract.totalSupply()).to.equal(0);
+        expect(await myContract.balanceOf(owner.address)).to.equal(0);
 
         await myContract.mint(owner.address, newPurpose);
-        expect(await myContract.totalSupply()).to.equal(1);
+        expect(await myContract.balanceOf(owner.address)).to.equal(1);
 
-        const URI = await myContract.tokenURI(1);
+        const URI = await myContract.tokenURI(0);
 
       });
 

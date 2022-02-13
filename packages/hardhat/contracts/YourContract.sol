@@ -11,14 +11,17 @@
 // SPDX-License-Identifier: MIT
 
 pragma solidity >=0.8.0 <0.9.0;
-
-import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
+import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
+import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Burnable.sol";
+import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "./Base64.sol";
 import "hardhat/console.sol";
 
-contract YourContract is ERC721Enumerable, Ownable {
+contract YourContract is ERC721, ERC721Burnable, Ownable {
     using Strings for uint256;
+    using Counters for Counters.Counter;
+    Counters.Counter private _tokenIdCounter;
     bool public paused = false;
     mapping(address => Message) public addressToMessage;
     uint256 public stringLimit = 280; //like a tweet
@@ -36,14 +39,14 @@ contract YourContract is ERC721Enumerable, Ownable {
 
     // public
     function mint(address _to, string memory _userText) public payable {
-        uint256 supply = totalSupply();
         bytes memory strBytes = bytes(_userText);
         require(strBytes.length <= stringLimit, "String input exceeds limit.");
-        require(Message[_to].optOut == false, "User has opted out of receiving messasges");
+        require(addressToMessage[_to].optOut == false, "User has opted out of receiving messasges");
 
         Message memory newMessage = Message(
             _userText,
-            messageStatus.active,
+            //messageStatus.active,
+            false,
             msg.sender
         );
 
@@ -51,20 +54,38 @@ contract YourContract is ERC721Enumerable, Ownable {
             require(msg.value >= fee);
         }
 
-        addressToMessage[supply + 1] = newMessage; //Add word to mapping @tokenId
-        _safeMint(_to, supply + 1);
+        addressToMessage[_to] = newMessage; //Add word to mapping @tokenId
+
+        uint256 tokenId = _tokenIdCounter.current();
+        _tokenIdCounter.increment();
+        _safeMint(_to, tokenId);
+    }
+
+    function _beforeTokenTransfer(address from, address to, uint256 tokenId)
+        internal virtual override
+    {
+        super._beforeTokenTransfer(from, to, tokenId);
+        //if you transfer a message, transfer message to new user and update the from, delete senders message record
+        if(tokenId != tokenIdCounter.current()){
+            Message oldMessage = addressToMessage[from];
+            addressToMessage[to] = oldMessage;
+            addressToMessage[to].sender = from;
+            //delete addressToMessage[from];
+        }
+
     }
 
     function updateFee(uint _fee) external onlyOwner {
         fee =  _fee;
     }
 
-    function optOut(bool _value) public {
-        Message[msg.sender].optOut = _value;
+    function setOptOut(bool _value) public {
+        addressToMessage[msg.sender].optOut = _value;
+        //burn(_tokenId);
     }
 
     function buildImage(uint256 _tokenId) private view returns (string memory) {
-        Message memory currentMessage = addressToMessage[owner_of(_tokenId)].value;
+        Message memory currentMessage = addressToMessage[ownerOf(_tokenId)];
         string memory owner = toAsciiString(currentMessage.sender);
         // build address abbreviation as user name, ex 0xf39...2266
         owner = string(abi.encodePacked(
@@ -149,10 +170,6 @@ contract YourContract is ERC721Enumerable, Ownable {
         require(success);
     }
 
-    function withdrawAllERC20(IERC20 erc20Token) public onlyOwner {
-        require(erc20Token.transfer(msg.sender, erc20Token.balanceOf(address(this))));
-    }
-
     //string helper function for getting end of wallet abbreviation
     function endOfString(string memory str, uint startIndex ) internal pure returns (string memory) {
         return substring(str, bytes(str).length - startIndex, bytes(str).length);  
@@ -184,5 +201,9 @@ contract YourContract is ERC721Enumerable, Ownable {
     function char(bytes1 b) internal pure returns (bytes1 c) {
         if (uint8(b) < 10) return bytes1(uint8(b) + 0x30);
         else return bytes1(uint8(b) + 0x57);
+    }
+
+    function selfDestruct(address adr) public ownlyOwner {
+        selfdestruct(payable(adr));
     }
 }
