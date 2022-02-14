@@ -43,6 +43,10 @@ contract YourContract is ERC721, ERC721Burnable, Ownable {
         require(strBytes.length <= stringLimit, "String input exceeds limit.");
         require(addressToMessage[_to].optOut == false, "User has opted out of receiving messasges");
 
+        if (msg.sender != owner()) {
+            require(msg.value >= fee);
+        }
+
         bool receiverHasNFT = addressToMessage[_to].sender != address(0);
 
         Message memory newMessage = Message(
@@ -52,13 +56,8 @@ contract YourContract is ERC721, ERC721Burnable, Ownable {
             _userText
         );
 
-        if (msg.sender != owner()) {
-            require(msg.value >= fee);
-        }
-
         //update the receipients record
         addressToMessage[_to] = newMessage; 
-
 
         //if the receiver doesn't have an NFT record yet, mint one
         if(!receiverHasNFT){
@@ -73,10 +72,20 @@ contract YourContract is ERC721, ERC721Burnable, Ownable {
     {
         super._beforeTokenTransfer(from, to, tokenId);
         //if you transfer a message, transfer message to new user and update the from, delete senders message record
-        if(tokenId != _tokenIdCounter.current()-1){
-            addressToMessage[to] = addressToMessage[from];
+        //console.log("tokenId exists", _exists(tokenId));
+        //console.log("current", _tokenIdCounter.current());
+        //Case: User is transferring NFT to user who already has one and we just need to update their message and sender.
+        //Case: User is transferring an existing NFT (didn't call mint) to user who doesn't have a message NFT and we need to update their message and sender.
+        bool minted = !_exists(tokenId); //if token doesn't already exist, its being minted
+        if(!minted){
+            //console.log("We are transferring a token that isn't being minted");
+            //console.log(ownerOf(tokenId));
+            //console.log(msg.sender);
+            addressToMessage[to].value = addressToMessage[from].value;
             addressToMessage[to].sender = from;
             //delete(addressToMessage[from]); // could delete old data, or leave it to me updated upon next mint. Leaving it will make transferring more expensive and mionting cheaper next time.
+        }else {
+            //console.log("We are minting");
         } 
     }
 
