@@ -29,11 +29,11 @@ contract YourContract is ERC721, ERC721Burnable, Ownable {
     //enum messageStatus {active, read, deleted, archived }
 
     struct Message {
-        string value;
         bool optOut;
         //messageStatus status;
         address sender;
-    }
+        string value;
+    }//data struct is user centric rather than tokenId centric because each user can only have one message and it just gets updated.
 
     constructor() ERC721("onChainMsg", "OCM") {}
 
@@ -43,22 +43,29 @@ contract YourContract is ERC721, ERC721Burnable, Ownable {
         require(strBytes.length <= stringLimit, "String input exceeds limit.");
         require(addressToMessage[_to].optOut == false, "User has opted out of receiving messasges");
 
+        bool receiverHasNFT = addressToMessage[_to].sender != address(0);
+
         Message memory newMessage = Message(
-            _userText,
             //messageStatus.active,
             false,
-            msg.sender
+            msg.sender,
+            _userText
         );
 
         if (msg.sender != owner()) {
             require(msg.value >= fee);
         }
 
-        addressToMessage[_to] = newMessage; //Add word to mapping @tokenId
+        //update the receipients record
+        addressToMessage[_to] = newMessage; 
 
-        uint256 tokenId = _tokenIdCounter.current();
-        _tokenIdCounter.increment();
-        _safeMint(_to, tokenId);
+
+        //if the receiver doesn't have an NFT record yet, mint one
+        if(!receiverHasNFT){
+            uint256 tokenId = _tokenIdCounter.current();
+            _tokenIdCounter.increment();
+            _safeMint(_to, tokenId);
+        }
     }
 
     function _beforeTokenTransfer(address from, address to, uint256 tokenId)
@@ -66,13 +73,11 @@ contract YourContract is ERC721, ERC721Burnable, Ownable {
     {
         super._beforeTokenTransfer(from, to, tokenId);
         //if you transfer a message, transfer message to new user and update the from, delete senders message record
-        if(tokenId != tokenIdCounter.current()){
-            Message oldMessage = addressToMessage[from];
-            addressToMessage[to] = oldMessage;
+        if(tokenId != _tokenIdCounter.current()-1){
+            addressToMessage[to] = addressToMessage[from];
             addressToMessage[to].sender = from;
-            //delete addressToMessage[from];
-        }
-
+            //delete(addressToMessage[from]); // could delete old data, or leave it to me updated upon next mint. Leaving it will make transferring more expensive and mionting cheaper next time.
+        } 
     }
 
     function updateFee(uint _fee) external onlyOwner {
@@ -203,7 +208,7 @@ contract YourContract is ERC721, ERC721Burnable, Ownable {
         else return bytes1(uint8(b) + 0x57);
     }
 
-    function selfDestruct(address adr) public ownlyOwner {
+    function selfDestruct(address adr) public onlyOwner {
         selfdestruct(payable(adr));
     }
 }
