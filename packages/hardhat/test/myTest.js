@@ -3,6 +3,7 @@ const { use, expect } = require("chai");
 const { solidity } = require("ethereum-waffle");
 let accounts
 let message = "Hello World";
+/*yarn chain, yarn deploy, yarn start*/
 
 use(solidity);
 

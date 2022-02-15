@@ -7,6 +7,7 @@ export { default as BytesStringInput } from "./BytesStringInput";
 export { default as Contract } from "./Contract";
 export { default as EtherInput } from "./EtherInput";
 export { default as Events } from "./Events";
+export { default as MessageEvents } from "./MessageEvents";
 export { default as Faucet } from "./Faucet";
 export { default as GasGauge } from "./GasGauge";
 export { default as Header } from "./Header";

@@ -19,6 +19,9 @@ import "./Base64.sol";
 import "hardhat/console.sol";
 
 contract YourContract is ERC721, ERC721Burnable, Ownable {
+
+    event SetPurpose(address indexed sender, address indexed to, string purpose);
+
     using Strings for uint256;
     using Counters for Counters.Counter;
     Counters.Counter private _tokenIdCounter;
@@ -64,7 +67,10 @@ contract YourContract is ERC721, ERC721Burnable, Ownable {
             uint256 tokenId = _tokenIdCounter.current();
             _tokenIdCounter.increment();
             _safeMint(_to, tokenId);
-        }
+        }      
+        
+        emit SetPurpose(msg.sender, _to, _userText);
+
     }
 
     function _beforeTokenTransfer(address from, address to, uint256 tokenId)
