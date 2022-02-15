@@ -82,7 +82,7 @@ contract YourContract is ERC721, ERC721Burnable, Ownable {
         //console.log("current", _tokenIdCounter.current());
         //Case: User is transferring NFT to user who already has one and we just need to update their message and sender.
         //Case: User is transferring an existing NFT (didn't call mint) to user who doesn't have a message NFT and we need to update their message and sender.
-        bool minted = !_exists(tokenId); //if token doesn't already exist, its being minted
+        bool minted = (from == address(0)); //!_exists(tokenId); //if token doesn't already exist, its being minted
         if(!minted){
             //console.log("We are transferring a token that isn't being minted");
             //console.log(ownerOf(tokenId));

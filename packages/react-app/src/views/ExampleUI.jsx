@@ -2,7 +2,7 @@ import { SyncOutlined } from "@ant-design/icons";
 import { utils } from "ethers";
 import { Button, Card, DatePicker, Divider, Input, Progress, Slider, Spin, Switch } from "antd";
 import React, { useState } from "react";
-import { Address, Balance, Events, MessageEvents } from "../components";
+import { Address, Balance, Events, AddressInput, MessageInbox, SentMessages } from "../components";
 
 
 export default function ExampleUI({
@@ -29,10 +29,12 @@ export default function ExampleUI({
         <Divider />
         <div style={{ margin: 8 }}>
           Address:
-          <Input
-            onChange={e => {
-              setNewAddress(e.target.value);
-            }}
+          <AddressInput
+            autoFocus
+            ensProvider={mainnetProvider}
+            placeholder="Enter address"
+            value={newAddress}
+            onChange={setNewAddress}
           />
           Message:
           <Input
@@ -83,21 +85,22 @@ export default function ExampleUI({
         startBlock={1}
       />
      */}
-      <MessageEvents
+      <MessageInbox
         title = "Messages"
         contracts={readContracts}
         contractName="YourContract"
-        eventName={readContracts.YourContract.filters.SetPurpose(null, address)}
+        eventName={readContracts.YourContract? readContracts.YourContract.filters.SetPurpose(null, address) : null}
         localProvider={localProvider}
         mainnetProvider={mainnetProvider}
         startBlock={1}
         arg={0}
+        replyFunction={setNewAddress}
       />
-      <MessageEvents
+      <SentMessages
         title = "Sent"
         contracts={readContracts}
         contractName="YourContract"
-        eventName={readContracts.YourContract.filters.SetPurpose(address)}
+        eventName={readContracts.YourContract? readContracts.YourContract.filters.SetPurpose(address) : null}
         localProvider={localProvider}
         mainnetProvider={mainnetProvider}
         startBlock={1}
