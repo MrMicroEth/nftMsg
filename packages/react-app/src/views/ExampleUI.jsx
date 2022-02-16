@@ -47,7 +47,7 @@ export default function ExampleUI({
             onClick={async () => {
               /* look how you call setPurpose on your contract: */
               /* notice how you pass a call back for tx updates too */
-              const result = tx(writeContracts.YourContract.mint(newAddress, newPurpose), update => {
+              const result = tx(writeContracts.Messenger.mint(newAddress, newPurpose), update => {
                 console.log("📡 Transaction Update:", update);
                 if (update && (update.status === "confirmed" || update.status === 1)) {
                   console.log(" 🍾 Transaction " + update.hash + " finished!");
@@ -74,11 +74,11 @@ export default function ExampleUI({
 
       {/*
         📑 Maybe display a list of events?
-          (uncomment the event and emit line in YourContract.sol! )
+          (uncomment the event and emit line in Messenger.sol! )
       */}
      {/* <Events
         contracts={readContracts}
-        contractName="YourContract"
+        contractName="Messenger"
         eventName="SetPurpose"
         localProvider={localProvider}
         mainnetProvider={mainnetProvider}
@@ -88,23 +88,21 @@ export default function ExampleUI({
       <MessageInbox
         title = "Messages"
         contracts={readContracts}
-        contractName="YourContract"
-        eventName={readContracts.YourContract? readContracts.YourContract.filters.SetPurpose(null, address) : null}
+        contractName="Messenger"
+        eventName={readContracts.Messenger? readContracts.Messenger.filters.SetPurpose(null, address) : null}
         localProvider={localProvider}
         mainnetProvider={mainnetProvider}
         startBlock={1}
-        arg={0}
         replyFunction={setNewAddress}
       />
       <SentMessages
         title = "Sent"
         contracts={readContracts}
-        contractName="YourContract"
-        eventName={readContracts.YourContract? readContracts.YourContract.filters.SetPurpose(address) : null}
+        contractName="Messenger"
+        eventName={readContracts.Messenger? readContracts.Messenger.filters.SetPurpose(address) : null}
         localProvider={localProvider}
         mainnetProvider={mainnetProvider}
         startBlock={1}
-        arg={1}
       />
 
     </div>

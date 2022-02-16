@@ -18,7 +18,11 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "./Base64.sol";
 import "hardhat/console.sol";
 
-contract YourContract is ERC721, ERC721Burnable, Ownable {
+abstract contract messengerImage {
+    function buildImage(uint _tokenId, string memory message, address sender) external virtual view returns(string memory);
+}
+
+contract Messenger is ERC721, ERC721Burnable, Ownable {
 
     event SetPurpose(address indexed sender, address indexed to, string purpose);
 
@@ -29,6 +33,7 @@ contract YourContract is ERC721, ERC721Burnable, Ownable {
     mapping(address => Message) public addressToMessage;
     uint256 public stringLimit = 280; //like a tweet
     uint256 fee = 0;
+    address public metaAddress;
     //enum messageStatus {active, read, deleted, archived }
 
     struct Message {
@@ -103,41 +108,17 @@ contract YourContract is ERC721, ERC721Burnable, Ownable {
         addressToMessage[msg.sender].optOut = _value;
         //burn(_tokenId);
     }
+    
+    function setMetaAddress(address _metaAddress) external onlyOwner {
+        metaAddress =  _metaAddress;
+    }
+    
 
     function buildImage(uint256 _tokenId) private view returns (string memory) {
         Message memory currentMessage = addressToMessage[ownerOf(_tokenId)];
         string memory owner = toAsciiString(currentMessage.sender);
-        // build address abbreviation as user name, ex 0xf39...2266
-        owner = string(abi.encodePacked(
-            '0x',
-            substring(owner,0,3),
-            '...',
-            endOfString(owner,4)
-            )
-        );
-        console.log(owner);
-
-        string memory image = 
-            Base64.encode(
-                bytes(
-                    abi.encodePacked(
-                        '<svg xmlns="http://www.w3.org/2000/svg" preserveaspectratio="xminymin meet" viewbox="0 0 350 350">',
-                        '<style>.base { fill: white; font-family: serif; font-size: 14px; text-wrap:200px; }</style>',
-                        '<rect width="100%" height="100%" fill="black" />',
-                        '<text x="50%" y="10" dominant-baseline="middle" text-anchor="middle" class="base">',
-                        'On Chain Messenger',
-                        '</text> ',
-                        '<text x="10" y="40" class="base">',
-                        owner,
-                        ': ', 
-                        currentMessage.value,
-                        '</text>',
-                        '</svg>'
-                    )
-                )
-            );
-        console.log( "data:image/svg+xml;base64,%s",image);        
-        return image;
+        messengerImage mymessengerImage = messengerImage(metaAddress);
+        return mymessengerImage.buildImage(_tokenId, currentMessage.value, currentMessage.sender);
     }
 
     function buildMetadata(uint256 _tokenid)
