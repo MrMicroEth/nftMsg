@@ -15,8 +15,34 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "./Base64.sol";
 import "hardhat/console.sol";
 
-contract MessengerImage is Ownable {
+//mainnet main ens registry 0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e
+//leia.eth node 0x6dcd869a3418d0034862d4d53292e407680fa9d6a896ba17d3f684e1edf5461b
+//mainnet default reverse router 0xA2C122BE93b0074270ebeE7f6b7292C7deB45047
+// reverse registrar node getter
 
+abstract contract ensResolver {
+    mapping(bytes32 => string) public name;
+}
+
+contract MessengerImage is Ownable {
+    address public ensAddress =0x084b1c3C81545d370f3634392De611CaaBFf8148 ;
+    mapping(bytes32 => string) public ensName;
+    address local = 0xA7d7A55E943B877c39AB59566fb1296b10aA4d29;
+    bytes32 localNode = node(local);
+
+    constructor(){
+        ensName[localNode] = "deupty.eth";
+    }
+
+    function  setENS(address ens) public{
+        ensAddress = ens;
+    }
+    
+    function getENSname(address user) public view returns (string memory){
+        bytes32 node = node(user);
+        ensResolver resolver = ensResolver(ensAddress);
+        return resolver.name(node);
+    }
 
     function buildImage(uint _tokenId, string memory value, address _owner) external view returns(string memory){
 
@@ -29,7 +55,23 @@ contract MessengerImage is Ownable {
             endOfString(owner,4)
             )
         );
-        console.log(owner);
+        //need to get node value from address.
+        //bytes32 ensnode =  0xf2a487af97f360672bc1fd07ea792e607c1b727a35796a88fd4ac96359432c80;
+        bytes32 ensnode = node(0xA7d7A55E943B877c39AB59566fb1296b10aA4d29);
+
+        //ensResolver resolver = ensResolver(ensAddress);
+        //string memory name = resolver.name(ensnode);
+        owner = ensName[localNode];
+        //bytes memory tempEmptyStringTest = bytes(name); // Uses memory
+        //if (tempEmptyStringTest.length == 0) {
+            ///owner = name;
+        //}
+       /* 
+        ensResolver resolver = ensResolver(address(0xA2C122BE93b0074270ebeE7f6b7292C7deB45047));
+        owner = resolver.name(0x6dcd869a3418d0034862d4d53292e407680fa9d6a896ba17d3f684e1edf5461b);
+*/
+        //console.log(localNode);
+        console.log("owner", owner);
 
         string memory image = 
             Base64.encode(
@@ -52,6 +94,30 @@ contract MessengerImage is Ownable {
             );
         console.log( "data:image/svg+xml;base64,%s",image);        
         return image;
+    }
+    
+    function node(address addr) public pure returns (bytes32) {
+        bytes32 ADDR_REVERSE_NODE = 0x91d1777781884d03a6757a803996e38de2a42967fb37eeaca72729271025a9e2;
+        return keccak256(abi.encodePacked(ADDR_REVERSE_NODE, sha3HexAddress(addr)));
+    }
+
+    function sha3HexAddress(address addr) private pure returns (bytes32 ret) {
+        addr;
+        ret; // Stop warning us about unused variables
+        assembly {
+            let lookup := 0x3031323334353637383961626364656600000000000000000000000000000000
+
+            for { let i := 40 } gt(i, 0) { } {
+                i := sub(i, 1)
+                mstore8(i, byte(and(addr, 0xf), lookup))
+                addr := div(addr, 0x10)
+                i := sub(i, 1)
+                mstore8(i, byte(and(addr, 0xf), lookup))
+                addr := div(addr, 0x10)
+            }
+
+            ret := keccak256(0, 40)
+        }
     }
 
     //only owner

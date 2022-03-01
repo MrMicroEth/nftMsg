@@ -26,7 +26,7 @@ module.exports = async ({ getNamedAccounts, deployments, getChainId }) => {
   });
 
   // Getting a previously deployed contract
-  const MessengerImage = await ethers.getContract("MessengerImage", deployer);
+  //const MessengerImage = await ethers.getContract("MessengerImage", deployer);
   /*  await MessengerImage.setPurpose("Hello");
   
     To take ownership of yourContract using the ownable library uncomment next line and add the 
