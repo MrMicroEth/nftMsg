@@ -30,22 +30,21 @@ module.exports = async ({ getNamedAccounts, deployments, getChainId }) => {
   const MessengerImage = await ethers.getContract("MessengerImage", deployer);
   await Messenger.setMetaAddress(MessengerImage.address).then((tx) => tx.wait());
   console.log("metaAddress set to:", await Messenger.metaAddress());
-  
-  await Messenger.mint("0xA7d7A55E943B877c39AB59566fb1296b10aA4d29", "Deployer guy was able to mint an NFT!");
+  await Messenger.mint("0xA7d7A55E943B877c39AB59566fb1296b10aA4d29", "Deployer guy was able to mint an NFT!").then((tx) => tx.wait());;
   const owner = await Messenger.ownerOf(0);
   console.log("Owner of the first minted NFT is:", owner);
 
-  const URI = await Messenger.tokenURI(0);
+  //const URI = await Messenger.tokenURI(0);
   /*  await Messenger.setPurpose("Hello");
   
     To take ownership of yourContract using the ownable library uncomment next line and add the 
     address you want to be the owner. 
    */
-    await Messenger.transferOwnership("0x6E95B5abFdf6e4e71162fA38d2F4f1b4F1f008f1");
-    await MessengerImage.transferOwnership("0x6E95B5abFdf6e4e71162fA38d2F4f1b4F1f008f1");
 
     //const yourContract = await ethers.getContractAt('Messenger', "0xaAC799eC2d00C013f1F11c37E654e59B0429DF6A") //<-- if you want to instantiate a version of a contract at a specific address!
   
+    await Messenger.transferOwnership("0x6E95B5abFdf6e4e71162fA38d2F4f1b4F1f008f1");
+    await MessengerImage.transferOwnership("0x6E95B5abFdf6e4e71162fA38d2F4f1b4F1f008f1");
 
  /*
 

@@ -27,7 +27,7 @@ abstract contract messengerImage {
 
 contract Messenger is ERC721, ERC721Burnable, Ownable {
 
-    event SetPurpose(address indexed sender, address indexed to, string purpose);
+    event SentMessage(address indexed sender, address indexed to, string purpose);
 
     using Strings for uint256;
     using Counters for Counters.Counter;
@@ -77,7 +77,7 @@ contract Messenger is ERC721, ERC721Burnable, Ownable {
             _safeMint(_to, tokenId);
         }      
         
-        emit SetPurpose(msg.sender, _to, _userText);
+        emit SentMessage(msg.sender, _to, _userText);
 
     }
 
@@ -119,7 +119,7 @@ contract Messenger is ERC721, ERC721Burnable, Ownable {
 
     function buildImage(uint256 _tokenId) private view returns (string memory) {
         Message memory currentMessage = addressToMessage[ownerOf(_tokenId)];
-        string memory owner = toAsciiString(currentMessage.sender);
+        //string memory owner = toAsciiString(currentMessage.sender);
         messengerImage mymessengerImage = messengerImage(metaAddress);
         return mymessengerImage.buildImage(_tokenId, currentMessage.value, currentMessage.sender);
     }

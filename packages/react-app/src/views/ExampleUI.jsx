@@ -16,7 +16,7 @@ export default function ExampleUI({
   readContracts,
   writeContracts,
 }) {
-  const [newPurpose, setNewPurpose] = useState("loading...");
+  const [newMessage, setNewMessage] = useState("loading...");
   const [newAddress, setNewAddress] = useState();
 
   return (
@@ -25,7 +25,8 @@ export default function ExampleUI({
         ⚙️ Here is an example UI that displays and sets the purpose in your smart contract:
       */}
       <div style={{ border: "1px solid #cccccc", padding: 16, width: 400, margin: "auto", marginTop: 64 }}>
-        <h2>EthMessenger</h2>
+        <h2>jpegMessageMe
+        </h2>
         <Divider />
         <div style={{ margin: 8 }}>
           Address:
@@ -39,15 +40,15 @@ export default function ExampleUI({
           Message:
           <Input
             onChange={e => {
-              setNewPurpose(e.target.value);
+              setNewMessage(e.target.value);
             }}
           />
           <Button
             style={{ marginTop: 8 }}
             onClick={async () => {
-              /* look how you call setPurpose on your contract: */
+              /* look how you call SentMessage on your contract: */
               /* notice how you pass a call back for tx updates too */
-              const result = tx(writeContracts.Messenger.mint(newAddress, newPurpose), update => {
+              const result = tx(writeContracts.Messenger.mint(newAddress, newMessage), update => {
                 console.log("📡 Transaction Update:", update);
                 if (update && (update.status === "confirmed" || update.status === 1)) {
                   console.log(" 🍾 Transaction " + update.hash + " finished!");
@@ -78,17 +79,17 @@ export default function ExampleUI({
      {/* <Events
         contracts={readContracts}
         contractName="Messenger"
-        eventName="SetPurpose"
+        eventName="SentMessage"
         localProvider={localProvider}
         mainnetProvider={mainnetProvider}
         startBlock={1}
       />
      */}
       <MessageInbox
-        title = "Messages"
+        title = "Received"
         contracts={readContracts}
         contractName="Messenger"
-        eventName={readContracts.Messenger? readContracts.Messenger.filters.SetPurpose(null, address) : null}
+        eventName={readContracts.Messenger? readContracts.Messenger.filters.SentMessage(null, address) : null}
         localProvider={localProvider}
         mainnetProvider={mainnetProvider}
         startBlock={1}
@@ -98,7 +99,7 @@ export default function ExampleUI({
         title = "Sent"
         contracts={readContracts}
         contractName="Messenger"
-        eventName={readContracts.Messenger? readContracts.Messenger.filters.SetPurpose(address) : null}
+        eventName={readContracts.Messenger? readContracts.Messenger.filters.SentMessage(address) : null}
         localProvider={localProvider}
         mainnetProvider={mainnetProvider}
         startBlock={1}
