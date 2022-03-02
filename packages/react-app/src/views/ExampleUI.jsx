@@ -69,7 +69,6 @@ export default function ExampleUI({
             Send Message!
           </Button>
         </div>
-        <h4>Sent Message: {newPurpose} to {newAddress}</h4>
       </div>
 
       {/*
@@ -93,7 +92,7 @@ export default function ExampleUI({
         localProvider={localProvider}
         mainnetProvider={mainnetProvider}
         startBlock={1}
-        replyFunction={setNewAddress}
+        buttonFunction={setNewAddress}
       />
       <SentMessages
         title = "Sent"
@@ -103,6 +102,7 @@ export default function ExampleUI({
         localProvider={localProvider}
         mainnetProvider={mainnetProvider}
         startBlock={1}
+        buttonFunction={setNewAddress}
       />
 
     </div>

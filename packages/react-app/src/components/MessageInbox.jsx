@@ -19,7 +19,7 @@ import { Address } from ".";
   />
 */
 
-export default function MessageInbox({ title, contracts, contractName, eventName, localProvider, mainnetProvider, startBlock, replyFunction}) {
+export default function MessageInbox({ title, contracts, contractName, eventName, localProvider, mainnetProvider, startBlock, buttonFunction}) {
   // 📟 Listen for broadcast events
   const events = useEventListener(contracts, contractName, eventName, localProvider, startBlock);
 
@@ -37,7 +37,7 @@ export default function MessageInbox({ title, contracts, contractName, eventName
               <Button
                 style={{ marginLeft: 8 }}
                 onClick={async () => {
-                  replyFunction(item.args[0])
+                  buttonFunction(item.args[0])
                 }}
                 >
                   Reply

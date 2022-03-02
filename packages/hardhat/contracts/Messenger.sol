@@ -25,31 +25,7 @@ abstract contract messengerImage {
     function buildImage(uint _tokenId, string memory message, address sender) external virtual view returns(string memory);
 }
 
-abstract contract nodeContract {
-    function node(address addr) public virtual pure returns (bytes32);
-}
-
-abstract contract ensResolver {
-    mapping(bytes32 => string) public name;
-}
-
 contract Messenger is ERC721, ERC721Burnable, Ownable {
-    address public ensAddress =0xA2C122BE93b0074270ebeE7f6b7292C7deB45047;
-
-    function  setENS(address ens) public{
-        ensAddress = ens;
-    }
-
-    function getENSname(address user) public view returns (string memory){
-        nodeContract noder = nodeContract(0x084b1c3C81545d370f3634392De611CaaBFf8148);
-        bytes32 userNode = noder.node(user);
-        ensResolver resolver = ensResolver(ensAddress);
-        //bytes memory tempEmptyStringTest = bytes(name); // Uses memory
-        //if (tempEmptyStringTest.length == 0) {
-            ///owner = name;
-        //}
-        return resolver.name(userNode);
-    }
 
     event SetPurpose(address indexed sender, address indexed to, string purpose);
 
