@@ -290,7 +290,6 @@ export default function Wallet(props) {
 
   return (
     <span>
-      {providerSend}
       <Modal
         visible={open}
         title={

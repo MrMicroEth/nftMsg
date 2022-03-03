@@ -1,4 +1,28 @@
 .App {
-  text-align: center;
   padding-left: calc(100vw - 100%);
+  font-family: "Source Code Pro",monospace;
+  font-size: '16px';
+}
+
+h2 {
+  text-align: center;
+}
+#inputDiv .msgInput, #inputDiv .ant-btn{
+  margin-top: 18px;
+}
+
+#inputDiv {
+  text-align: right;
+}
+
+.ant-list-item span {
+  margin-right: 4px;
+}
+
+
+.ant-list-item button {
+  margin-right: 14px;
+}
+
+canvas.identicon {
 }

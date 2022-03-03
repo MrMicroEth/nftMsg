@@ -25,7 +25,7 @@ export default function SentMessages({ title, contracts, contractName, eventName
 
   return (
     <div style={{ width: 600, margin: "auto", marginTop: 32, paddingBottom: 32 }}>
-      <h2>{title}:</h2>
+      <h2>{title}</h2>
       <List
         bordered
         dataSource={events}

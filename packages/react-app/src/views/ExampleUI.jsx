@@ -3,6 +3,7 @@ import { utils } from "ethers";
 import { Button, Card, DatePicker, Divider, Input, Progress, Slider, Spin, Switch } from "antd";
 import React, { useState } from "react";
 import { Address, Balance, Events, AddressInput, MessageInbox, SentMessages } from "../components";
+import TextArea from "antd/lib/input/TextArea";
 
 
 export default function ExampleUI({
@@ -24,12 +25,8 @@ export default function ExampleUI({
       {/*
         ⚙️ Here is an example UI that displays and sets the purpose in your smart contract:
       */}
-      <div style={{ border: "1px solid #cccccc", padding: 16, width: 400, margin: "auto", marginTop: 64 }}>
-        <h2>jpegMessageMe
-        </h2>
-        <Divider />
-        <div style={{ margin: 8 }}>
-          Address:
+      <div style={{ padding: 0, width: 600, margin: "auto", marginTop: 64, marginBottom: 64 }}>
+        <div id = "inputDiv">
           <AddressInput
             autoFocus
             ensProvider={mainnetProvider}
@@ -37,14 +34,16 @@ export default function ExampleUI({
             value={newAddress}
             onChange={setNewAddress}
           />
-          Message:
-          <Input
+          <TextArea
+            rows={2}
+            maxLength = {280}
+            className = "msgInput"
+            placeholder="Enter Message"
             onChange={e => {
               setNewMessage(e.target.value);
             }}
           />
           <Button
-            style={{ marginTop: 8 }}
             onClick={async () => {
               /* look how you call SentMessage on your contract: */
               /* notice how you pass a call back for tx updates too */
@@ -67,7 +66,7 @@ export default function ExampleUI({
               console.log(await result);
             }}
           >
-            Send Message!
+            Send Message
           </Button>
         </div>
       </div>
