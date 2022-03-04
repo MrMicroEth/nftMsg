@@ -26,7 +26,7 @@ const { isAddress, getAddress, formatUnits, parseUnits } = utils;
 //
 // Select the network you want to deploy to here:
 //
-const defaultNetwork = "localhost";
+const defaultNetwork = "hardhat";
 
 const mainnetGwei = 21;
 
@@ -72,7 +72,12 @@ module.exports = {
       
       */
     },
-
+    hardhat: {
+      forking: {
+       url: `https://mainnet.infura.io/v3/${process.env.MAINNET_INFURA_KEY}`,
+       blockNumber:14317090 
+      }
+    },
     // rinkeby: {
     //   url: `https://rinkeby.infura.io/v3/${process.env.RINKEBY_INFURA_KEY}`,
     //   accounts: [`${process.env.RINKEBY_DEPLOYER_PRIV_KEY}`],

@@ -34,7 +34,7 @@ module.exports = async ({ getNamedAccounts, deployments, getChainId }) => {
   const owner = await Messenger.ownerOf(0);
   console.log("Owner of the first minted NFT is:", owner);
 
-  //const URI = await Messenger.tokenURI(0);
+  const URI = await Messenger.tokenURI(0);
   /*  await Messenger.setPurpose("Hello");
   
     To take ownership of yourContract using the ownable library uncomment next line and add the 

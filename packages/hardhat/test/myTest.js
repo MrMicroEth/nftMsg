@@ -2,7 +2,7 @@ const { ethers } = require("hardhat");
 const { use, expect } = require("chai");
 const { solidity } = require("ethereum-waffle");
 let accounts
-let message = "Hello World";
+let message = "Hello, I am interested in purchasing your punk #4358 for 1000Eth, please email me at me@royce.email, thanks";
 /*yarn chain, yarn deploy, yarn start*/
 
 use(solidity);
@@ -19,11 +19,18 @@ describe("My Dapp", function () {
     accounts = await ethers.getSigners();
   });
     
-  describe("YourContract", function () {
-    it("Should deploy YourContract", async function () {
-      const YourContract = await ethers.getContractFactory("YourContract");
+  describe("Messenger", function () {
+    it("Should deploy Messenger", async function () {
+      const MessengerImage = await ethers.getContractFactory("MessengerImage");
+      const Messenger = await ethers.getContractFactory("Messenger");
 
-      myContract = await YourContract.deploy();
+      const image = await MessengerImage.deploy();
+      
+      console.log(image.address);
+      myContract = await Messenger.deploy();
+      
+    await myContract.setMetaAddress(image.address).then((tx) => tx.wait());
+    console.log("metaAddress set to:", await myContract.metaAddress());
     });
 
     describe("mint()", function () {
@@ -37,7 +44,7 @@ describe("My Dapp", function () {
       });
 
       it("Should be able to modify a users NFT", async function () {
-        message = "Hello, I am interested in purchasing your punk #4358 for 1000Eth, please email me at me@royce.email, thanks";
+        message = "Hello, I am #4358 for 1000Eth, please email me at me@royce.email, thanks";
         await myContract.mint(accounts[1].address, message);
         
         const newValue = (await myContract.addressToMessage(accounts[1].address)).value;
@@ -63,7 +70,7 @@ describe("My Dapp", function () {
         
         const URI = await myContract.tokenURI(0);
       });
-      // Uncomment the event and emit lines in YourContract.sol to make this test pass
+      // Uncomment the event and emit lines in Messenger.sol to make this test pass
 
       /*it("Should emit a SetPurpose event ", async function () {
         const [owner] = await ethers.getSigners();

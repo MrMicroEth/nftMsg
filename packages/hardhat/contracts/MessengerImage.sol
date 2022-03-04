@@ -11,9 +11,12 @@
 // SPDX-License-Identifier: MIT
 
 pragma solidity >=0.8.0 <0.9.0;
+pragma experimental ABIEncoderV2;
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "./Base64.sol";
 import "hardhat/console.sol";
+//import "github.com/Arachnid/solidity-stringutils/strings.sol";
+
 
 //mainnet main ens registry 0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e
 //leia.eth node 0x6dcd869a3418d0034862d4d53292e407680fa9d6a896ba17d3f684e1edf5461b
@@ -43,8 +46,37 @@ contract MessengerImage is Ownable {
         ensResolver resolver = ensResolver(ensAddress);
         name = resolver.name(userNode);
     }
+        
+    function wordWrap(string memory message) private view returns (string[] memory lines){
+        lines[0] = "Testing line 1";
+    }
 
     function buildImage(uint _tokenId, string memory value, address _owner) external view returns(string memory){
+        string memory message = "The new message that the user is turning into an NFT";
+        string memory line1 = "no memory arrays is silly";
+        string memory line2 ;
+        string memory line3 ;
+        string memory line4 ;
+        string memory line5 ;
+        uint maxLength = 10;
+        console.log("message :", message);
+        while(bytes(message).length > maxLength){
+            bool found = false;
+            bytes memory strBytes = bytes(message);
+            bytes memory result = new bytes(maxLength);
+            for(uint i = maxLength - 1; i>0; i--) {
+                if(strBytes[i] == " "){
+                    console.log("found a space at", i);
+                    line1 = substring(message, 0, i);
+                    break;
+                }
+                //result[i-startIndex] = strBytes[i];
+            }
+            //return string(result);
+            message = "done";
+        }
+        console.log("message :", message);
+        console.log("line 1:", line1);
 
         string memory owner = toAsciiString(_owner);
         // build address abbreviation as user name, ex 0xf39...2266
