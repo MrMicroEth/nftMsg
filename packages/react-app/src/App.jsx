@@ -58,14 +58,15 @@ const initialNetwork = NETWORKS.localhost; // <------- select your target fronte
 // 😬 Sorry for all the console logging
 const DEBUG = true;
 const NETWORKCHECK = true;
-const USE_BURNER_WALLET = true; // toggle burner wallet feature
+const USE_BURNER_WALLET = false; // toggle burner wallet feature
 const USE_NETWORK_SELECTOR = false;
 
 const web3Modal = Web3ModalSetup();
 
 // 🛰 providers
 const providers = [
-  "https://eth-mainnet.gateway.pokt.network/v1/lb/611156b4a585a20035148406",
+  "https://eth-mainnet.gateway.pokt.network/v1/lb/621d3da84e140e003a30c3e8",
+  //"https://eth-mainnet.gateway.pokt.network/v1/lb/611156b4a585a20035148406",
   `https://eth-mainnet.alchemyapi.io/v2/${ALCHEMY_KEY}`,
   "https://rpc.scaffoldeth.io:48544",
 ];

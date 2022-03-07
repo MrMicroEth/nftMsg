@@ -36,7 +36,7 @@ export default function ExampleUI({
           />
           <TextArea
             rows={2}
-            maxLength = {280}
+            maxLength = {175}
             className = "msgInput"
             placeholder="Enter Message"
             onChange={e => {

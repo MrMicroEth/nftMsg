@@ -29,7 +29,6 @@ module.exports = async ({ getNamedAccounts, deployments, getChainId }) => {
   const Messenger = await ethers.getContract("Messenger", deployer);
   const MessengerImage = await ethers.getContract("MessengerImage", deployer);
   await Messenger.setMetaAddress(MessengerImage.address).then((tx) => tx.wait());
-  console.log("metaAddress set to:", await Messenger.metaAddress());
   await Messenger.mint("0xA7d7A55E943B877c39AB59566fb1296b10aA4d29", "Deployer guy was able to mint an NFT!").then((tx) => tx.wait());;
   const owner = await Messenger.ownerOf(0);
   console.log("Owner of the first minted NFT is:", owner);

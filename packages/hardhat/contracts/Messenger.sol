@@ -34,7 +34,7 @@ contract Messenger is ERC721, ERC721Burnable, Ownable {
     Counters.Counter private _tokenIdCounter;
     bool public paused = false;
     mapping(address => Message) public addressToMessage;
-    uint256 public stringLimit = 280; //like a tweet
+    uint256 public stringLimit = 175; //like a tweet
     uint256 fee = 0;
     address public metaAddress;
     //enum messageStatus {active, read, deleted, archived }
@@ -81,6 +81,10 @@ contract Messenger is ERC721, ERC721Burnable, Ownable {
 
     }
 
+    function tokenSupply() public view returns(uint){
+        return _tokenIdCounter.current();
+    }
+
     function _beforeTokenTransfer(address from, address to, uint256 tokenId)
         internal virtual override
     {
@@ -107,8 +111,8 @@ contract Messenger is ERC721, ERC721Burnable, Ownable {
         fee =  _fee;
     }
 
-    function setOptOut(bool _value) public {
-        addressToMessage[msg.sender].optOut = _value;
+    function changeOptOut() public {
+        addressToMessage[msg.sender].optOut = !addressToMessage[msg.sender].optOut;
         //burn(_tokenId);
     }
     
