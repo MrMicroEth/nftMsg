@@ -1,7 +1,7 @@
 import { SyncOutlined } from "@ant-design/icons";
 import { utils } from "ethers";
 import { Button, Card, DatePicker, Divider, Input, Progress, Slider, Spin, Switch } from "antd";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Address, Balance, Events, AddressInput, MessageInbox, SentMessages } from "../components";
 import TextArea from "antd/lib/input/TextArea";
 
@@ -19,6 +19,27 @@ export default function ExampleUI({
 }) {
   const [newMessage, setNewMessage] = useState("loading...");
   const [newAddress, setNewAddress] = useState();
+  const [SVG, setSVG] = useState("");
+  const [show, setShow] = useState(true);
+
+  
+  useEffect(() => {
+    const updateSVG = async () => {
+    let newSVG = "";
+      try {
+        newSVG = await readContracts.MessengerImage.buildImage(0, newMessage, address);
+        setShow(true);
+      } catch (e) {
+        console.log(e);
+        setSVG("");
+        setShow(false);
+      }
+    setSVG("data:image/svg+xml;base64," + newSVG);
+    //console.log(newSVG);
+    };
+    updateSVG();
+  }, [newAddress, newMessage]);
+
 
   return (
     <div>
@@ -69,6 +90,7 @@ export default function ExampleUI({
             Send Message
           </Button>
         </div>
+      <img src={SVG} style={{ display: show ? "block" : "none" }} alt="NFT Message" />
       </div>
 
       {/*
@@ -98,8 +120,8 @@ export default function ExampleUI({
         title = "Sent"
         contracts={readContracts}
         contractName="Messenger"
-        eventName={readContracts.Messenger? readContracts.Messenger.filters.SentMessage(address) : null}
         localProvider={localProvider}
+        eventName={readContracts.Messenger? readContracts.Messenger.filters.SentMessage(address) : null}
         mainnetProvider={mainnetProvider}
         startBlock={1}
         buttonFunction={setNewAddress}

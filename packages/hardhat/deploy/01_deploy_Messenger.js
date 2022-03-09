@@ -24,7 +24,6 @@ module.exports = async ({ getNamedAccounts, deployments, getChainId }) => {
     log: true,
     waitConfirmations: 5,
   });
-
   // Getting a previously deployed contract
   const Messenger = await ethers.getContract("Messenger", deployer);
   const MessengerImage = await ethers.getContract("MessengerImage", deployer);
@@ -41,19 +40,17 @@ module.exports = async ({ getNamedAccounts, deployments, getChainId }) => {
    */
 
     //const yourContract = await ethers.getContractAt('Messenger', "0xaAC799eC2d00C013f1F11c37E654e59B0429DF6A") //<-- if you want to instantiate a version of a contract at a specific address!
-  
-    await Messenger.transferOwnership("0x6E95B5abFdf6e4e71162fA38d2F4f1b4F1f008f1");
-    await MessengerImage.transferOwnership("0x6E95B5abFdf6e4e71162fA38d2F4f1b4F1f008f1");
+    //await Messenger.transferOwnership("0x6E95B5abFdf6e4e71162fA38d2F4f1b4F1f008f1");
+    //await MessengerImage.transferOwnership("0x6E95B5abFdf6e4e71162fA38d2F4f1b4F1f008f1");
 
- /*
 
   //If you want to send value to an address from the deployer
   const deployerWallet = ethers.provider.getSigner()
   await deployerWallet.sendTransaction({
-    to: "0x34aA3F359A9D614239015126635CE7732c18fDF3",
-    value: ethers.utils.parseEther("0.001")
+    //to: "0x34aA3F359A9D614239015126635CE7732c18fDF3",
+    to: "0xA7d7A55E943B877c39AB59566fb1296b10aA4d29",
+    value: ethers.utils.parseEther("1.001")
   })
-  */
 
   /*
   //If you want to send some ETH to a contract on deploy (make your constructor payable!)

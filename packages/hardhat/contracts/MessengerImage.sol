@@ -88,7 +88,7 @@ contract MessengerImage is Ownable {
         string constant textPost = '</text>';
 
     function buildImage(uint _tokenId, string memory message, address _owner) external view returns(string memory){
-        message = "Hello I would like to buy your ENS name Ford.ens please. Just respond on OpenSean or a tweet @ford thankyou for your consideration!";
+        //message = "Hello I would like to buy your ENS name Ford.ens please. Just respond on OpenSean or a tweet @ford thankyou for your consideration!";
         string memory line1;
         string memory line2;
         string memory line3;

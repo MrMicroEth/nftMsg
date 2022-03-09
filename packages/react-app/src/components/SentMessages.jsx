@@ -34,6 +34,8 @@ export default function SentMessages({ title, contracts, contractName, eventName
             <List.Item  key={item.blockNumber + "_" + item.args.sender + "_" + item.args.purpose}>
               <Address address={item.args[1]} ensProvider={mainnetProvider} fontSize={16} />
               {item.args[2]}
+              {contracts.MessengerImage? "found":""}
+              //(0, item.args[2], item.args[1]);
             </List.Item>
           );
         }}
