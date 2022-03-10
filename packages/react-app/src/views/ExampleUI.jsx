@@ -17,7 +17,7 @@ export default function ExampleUI({
   readContracts,
   writeContracts,
 }) {
-  const [newMessage, setNewMessage] = useState("loading...");
+  const [newMessage, setNewMessage] = useState("Message Preview");
   const [newAddress, setNewAddress] = useState();
   const [SVG, setSVG] = useState("");
   const [show, setShow] = useState(true);
@@ -36,9 +36,10 @@ export default function ExampleUI({
       }
     setSVG("data:image/svg+xml;base64," + newSVG);
     //console.log(newSVG);
+    setShow(false);
     };
     updateSVG();
-  }, [newAddress, newMessage]);
+  }, [newAddress, newMessage, readContracts]);
 
 
   return (
@@ -90,7 +91,7 @@ export default function ExampleUI({
             Send Message
           </Button>
         </div>
-      <img src={SVG} style={{ display: show ? "block" : "none" }} alt="NFT Message" />
+      <img id="preview" src={SVG} style={{ display: show ? "block" : "none" }} alt="NFT Message" />
       </div>
 
       {/*

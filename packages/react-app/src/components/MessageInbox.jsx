@@ -1,4 +1,4 @@
-import { List, Button } from "antd";
+import { List, Button, space } from "antd";
 import { useEventListener } from "eth-hooks/events/useEventListener";
 import { Address } from ".";
 
@@ -24,23 +24,33 @@ export default function MessageInbox({ title, contracts, contractName, eventName
   const events = useEventListener(contracts, contractName, eventName, localProvider, startBlock);
 
   return (
-    <div style={{ width: 600, margin: "auto", marginTop: 32, paddingBottom: 32 }}>
+    <div className="messageList" >
       <h2>{title}</h2>
       <List
         bordered
+        pagination={{
+          onChange: page => {
+            console.log(page);
+          },
+          pageSize: 5,
+        }}
+        itemLayout="vertical"
         dataSource={events}
         renderItem={item => {
           return (
-            <List.Item key={item.blockNumber + "_" + item.args.sender + "_" + item.args.purpose}>
-              <Button
+            <List.Item 
+              key={item.blockNumber + "_" + item.args.sender + "_" + item.args.purpose}
+              actions={[
+                <Address address={item.args[0]} ensProvider={mainnetProvider} fontSize={16} />,
+                <Button
                 onClick={async () => {
                   buttonFunction(item.args[0])
                 }}
                 >
                 Reply
-              </Button>
-
-              <Address address={item.args[0]} ensProvider={mainnetProvider} fontSize={16} />
+                </Button>,
+              ]}
+            >
               {item.args[2]}
             </List.Item>
           );
