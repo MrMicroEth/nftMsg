@@ -21,7 +21,7 @@ import { Address } from ".";
 
 export default function SentMessages({ title, contracts, contractName, eventName, localProvider, mainnetProvider, startBlock, buttonFunction }) {
   // 📟 Listen for broadcast events
-  const events = useEventListener(contracts, contractName, eventName, localProvider, startBlock);
+  const events = useEventListener(contracts, contractName, eventName, localProvider, startBlock).slice().reverse();
 
   return (
     <div className="messageList" >

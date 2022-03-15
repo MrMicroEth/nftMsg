@@ -19,9 +19,12 @@ import { Address } from ".";
   />
 */
 
+let oldEvents;
+
 export default function MessageInbox({ title, contracts, contractName, eventName, localProvider, mainnetProvider, startBlock, buttonFunction}) {
   // 📟 Listen for broadcast events
-  const events = useEventListener(contracts, contractName, eventName, localProvider, startBlock);
+  let events = useEventListener(contracts, contractName, eventName, localProvider, startBlock).slice().reverse();
+
 
   return (
     <div className="messageList" >

@@ -36,7 +36,7 @@ export default function ExampleUI({
       }
     setSVG("data:image/svg+xml;base64," + newSVG);
     //console.log(newSVG);
-    setShow(false);
+  //  setShow(false);
     };
     updateSVG();
   }, [newAddress, newMessage, readContracts]);
