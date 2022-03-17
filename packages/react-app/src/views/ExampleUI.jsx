@@ -36,9 +36,9 @@ export default function ExampleUI({
       }
     setSVG("data:image/svg+xml;base64," + newSVG);
     //console.log(newSVG);
-  //  setShow(false);
+    //setShow(false);
     };
-    updateSVG();
+    //updateSVG(); //uncomment this to use this function
   }, [newAddress, newMessage, readContracts]);
 
 
@@ -49,10 +49,11 @@ export default function ExampleUI({
       */}
       <div className = "topDiv" >
         <div id = "inputDiv">
+          <div id="inputBox">
           <AddressInput
             autoFocus
             ensProvider={mainnetProvider}
-            placeholder="Enter address"
+            placeholder="To:"
             value={newAddress}
             onChange={setNewAddress}
           />
@@ -60,11 +61,12 @@ export default function ExampleUI({
             rows={2}
             maxLength = {175}
             className = "msgInput"
-            placeholder="Enter Message"
+            placeholder="Message"
             onChange={e => {
               setNewMessage(e.target.value);
             }}
           />
+          </div>
           <Button
             onClick={async () => {
               /* look how you call SentMessage on your contract: */
@@ -88,12 +90,14 @@ export default function ExampleUI({
               console.log(await result);
             }}
           >
-            Send Message
+            <h2>Send</h2>
           </Button>
         </div>
+        {/* This shows a preview of the image manifested from the contract
         <div className = "imageDiv" >
           <img id="preview" src={SVG} style={{ display: show ? "block" : "none" }} alt="NFT Message" />
         </div>
+          */}
       </div>
 
       {/*

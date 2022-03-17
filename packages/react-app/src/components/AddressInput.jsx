@@ -113,19 +113,6 @@ export default function AddressInput(props) {
         placeholder={props.placeholder ? props.placeholder : "address"}
         prefix={<Blockie address={currentValue} size={8} scale={3} />}
         value={ethers.utils.isAddress(currentValue) && !isENS(currentValue) && isENS(ens) ? ens : currentValue}
-        addonAfter={
-          <div
-            style={{ marginTop: 4, cursor: "pointer" }}
-            onClick={() => {
-              setScan(!scan);
-            }}
-          >
-            <Badge count={<CameraOutlined style={{ fontSize: 9 }} />}>
-              <QrcodeOutlined style={{ fontSize: 18 }} />
-            </Badge>{" "}
-            Scan
-          </div>
-        }
         onChange={e => {
           updateAddress(e.target.value);
         }}
