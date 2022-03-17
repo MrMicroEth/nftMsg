@@ -1,25 +1,59 @@
 .App {
-  padding-left: calc(100vw - 100%);
   font-family: "Source Code Pro",monospace;
+  font-family: "DM Sans", sans-serif;
   font-size: '16px';
 }
 
 h2 {
   text-align: center;
 }
+
 #inputDiv .msgInput, #inputDiv .ant-btn{
   margin-top: 18px;
 }
 
+#container {
+  width: 1164px; 
+  max-width: 90%;
+  margin: 0px auto;
+}
+
+.topDiv {
+  display: flex;
+  padding: 0px;
+  margin: 64px auto;
+  gap: 20px;
+}
+
 #inputDiv {
   text-align: right;
+  flex: 1 ;
+}
+
+.imageDiv {
+  flex: 0 0 350px;
+}
+
+#preview {
+  border: 1px solid rgb(240, 240, 240);
+  border-radius: 10px;
 }
 
 .messageList {
-  width: 600px; 
   margin: auto;
   margin-top: 32px;
   padding-bottom: 32px; 
+}
+
+.content {
+  background-image: linear-gradient(to right, rgba(0, 0, 255, 0.6), rgba(0, 102, 204, 0.9));
+  color:white;
+  padding:2px 8px;
+  border-radius: 5px;
+  display: inline-block;
+}
+
+.sent {
 }
 
 .ant-list-item span {

@@ -27,7 +27,6 @@ export default function SentMessages({ title, contracts, contractName, eventName
     <div className="messageList" >
       <h2>{title}</h2>
       <List
-        bordered
         pagination={{
           onChange: page => {
             console.log(page);
@@ -44,7 +43,9 @@ export default function SentMessages({ title, contracts, contractName, eventName
                 <Address address={item.args[1]} ensProvider={mainnetProvider} fontSize={16} />,
               ]}
             >
-              {item.args[2]}
+              <div className="content sent">
+                {item.args[2]}
+              </div>
             </List.Item>
           );
         }}

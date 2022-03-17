@@ -43,11 +43,11 @@ export default function ExampleUI({
 
 
   return (
-    <div>
+    <div id="container">
       {/*
         ⚙️ Here is an example UI that displays and sets the purpose in your smart contract:
       */}
-      <div style={{ padding: 0, width: 600, margin: "auto", marginTop: 64, marginBottom: 64 }}>
+      <div className = "topDiv" >
         <div id = "inputDiv">
           <AddressInput
             autoFocus
@@ -91,7 +91,9 @@ export default function ExampleUI({
             Send Message
           </Button>
         </div>
-      <img id="preview" src={SVG} style={{ display: show ? "block" : "none" }} alt="NFT Message" />
+        <div className = "imageDiv" >
+          <img id="preview" src={SVG} style={{ display: show ? "block" : "none" }} alt="NFT Message" />
+        </div>
       </div>
 
       {/*

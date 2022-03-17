@@ -30,7 +30,6 @@ export default function MessageInbox({ title, contracts, contractName, eventName
     <div className="messageList" >
       <h2>{title}</h2>
       <List
-        bordered
         pagination={{
           onChange: page => {
             console.log(page);
@@ -54,7 +53,9 @@ export default function MessageInbox({ title, contracts, contractName, eventName
                 </Button>,
               ]}
             >
-              {item.args[2]}
+              <div className="content">
+                {item.args[2]}
+              </div>
             </List.Item>
           );
         }}
