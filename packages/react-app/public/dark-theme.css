@@ -23868,3 +23868,9 @@ div.ant-typography-edit-content.ant-typography-rtl {
 .highlight {
   background-color: #3f3f3f;
 }
+/******Custom dark theme*****/
+
+span.ant-input-affix-wrapper{
+  background-color: white;
+  color:gray;
+}

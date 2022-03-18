@@ -49,16 +49,19 @@ h2 {
   border:none;
 }
 
-h2 {
-  font-size: 17px;
-    font-weight: 700;
-    margin: 60px 0px 15px;
-}
 
 #inputBox{
   border:2px solid rgb(43, 43, 43);
+  border:none;
+  background: #d2d2d2;
   padding: 20px;
   border-radius:5px;
+}
+
+button.ant-btn{
+  border:none;
+  background: #d2d2d2;
+  color: rgba(0, 0, 0, 0.85);
 }
 
 textarea.ant-input{
@@ -67,7 +70,7 @@ textarea.ant-input{
   background-image: linear-gradient(to right, rgb(58, 208, 91 ), rgb(0, 168, 255));
 }
 
-textarea.ant-input::placeholder{
+textarea.ant-input::placeholder, input.ant-input::placeholder{
   color: rgb(223, 223, 223);
 }
 
@@ -78,8 +81,9 @@ textarea.ant-input::placeholder{
   border-radius: 5px 5px 5px 0px;
   display: inline-block;
 }
+ 
 
-.ant-list-item{
+.messageList .ant-list-items .ant-list-item, .messageList .ant-list-split.ant-list-something-after-last-item .ant-spin-container > .ant-list-items > .ant-list-item:last-child, .ant-transfer-customize-list .ant-table-wrapper .ant-table-small > .ant-table-content .ant-table-row:last-child {
   border-bottom: none;
 }
 

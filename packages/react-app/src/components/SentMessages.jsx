@@ -29,8 +29,7 @@ export default function SentMessages({ title, contracts, contractName, eventName
       <List
         pagination={{
           onChange: page => {
-            console.log(page);
-          },
+            console.log(page); },
           pageSize: 5,
         }}
         itemLayout="vertical"

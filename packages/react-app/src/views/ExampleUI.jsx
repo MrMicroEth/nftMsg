@@ -90,7 +90,7 @@ export default function ExampleUI({
               console.log(await result);
             }}
           >
-            <h2>Send</h2>
+            Send
           </Button>
         </div>
         {/* This shows a preview of the image manifested from the contract

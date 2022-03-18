@@ -1,6 +1,7 @@
 import { List, Button, space } from "antd";
 import { useEventListener } from "eth-hooks/events/useEventListener";
 import { Address } from ".";
+import React, { useEffect, useState } from "react";
 
 /*
   ~ What it does? ~
@@ -25,6 +26,23 @@ export default function MessageInbox({ title, contracts, contractName, eventName
   // 📟 Listen for broadcast events
   let events = useEventListener(contracts, contractName, eventName, localProvider, startBlock).slice().reverse();
 
+  const [show, setShow] = useState(true);
+
+  
+  useEffect(() => {
+    const updateTimes = async () => {
+      try {
+    console.log("EVENTS UPDATED, add dates, or make second array");
+    console.log(events[0].blockNumber);
+    const msgTime = (await localProvider.getBlock(events[0].blockNumber)).timestamp;
+    console.log(new Date(msgTime));
+      } catch (e) {
+        console.log(e);
+      }
+    //console.log(newSVG);
+    };
+    updateTimes(); //uncomment this to use this function
+  }, [events]);
 
   return (
     <div className="messageList" >
@@ -55,6 +73,7 @@ export default function MessageInbox({ title, contracts, contractName, eventName
             >
               <div className="content">
                 {item.args[2]}
+                {item.blockNumber}
               </div>
             </List.Item>
           );
