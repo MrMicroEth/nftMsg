@@ -2,7 +2,7 @@ import { List, Button, space } from "antd";
 import { useEventListener } from "eth-hooks/events/useEventListener";
 import { Address } from ".";
 import React, { useEffect, useState } from "react";
-
+import { exit } from "process";
 /*
   ~ What it does? ~
 
@@ -20,28 +20,32 @@ import React, { useEffect, useState } from "react";
   />
 */
 
-let oldEvents;
 
 export default function MessageInbox({ title, contracts, contractName, eventName, localProvider, mainnetProvider, startBlock, buttonFunction}) {
   // 📟 Listen for broadcast events
   let events = useEventListener(contracts, contractName, eventName, localProvider, startBlock).slice().reverse();
 
-  const [show, setShow] = useState(true);
+  const [dateTime, setDateTime] = useState();
 
-  
   useEffect(() => {
     const updateTimes = async () => {
-      try {
-    console.log("EVENTS UPDATED, add dates, or make second array");
-    console.log(events[0].blockNumber);
-    const msgTime = (await localProvider.getBlock(events[0].blockNumber)).timestamp;
-    console.log(new Date(msgTime));
-      } catch (e) {
-        console.log(e);
-      }
-    //console.log(newSVG);
+      const someFunction = async (myArray) => {
+         const promises = events.map(async (i) => {
+            const newTime = (await i.getBlock()).timestamp;
+            const dateTime = new Date(newTime *1000);
+            return dateTime.toLocaleString();
+        });
+        return Promise.all(promises);
+      };
+      console.log(await someFunction());
+      const result = await someFunction();
+      setDateTime(JSON.stringify(result));//When I save the array directly, it creates an infinite loop for some strange reason
     };
-    updateTimes(); //uncomment this to use this function
+    try{
+      updateTimes();
+    } catch (e) {
+      console.log(e);
+    }
   }, [events]);
 
   return (
@@ -56,12 +60,15 @@ export default function MessageInbox({ title, contracts, contractName, eventName
         }}
         itemLayout="vertical"
         dataSource={events}
-        renderItem={item => {
+        renderItem={(item, index) => {
           return (
             <List.Item 
               key={item.blockNumber + "_" + item.args.sender + "_" + item.args.purpose}
               actions={[
                 <Address address={item.args[0]} ensProvider={mainnetProvider} fontSize={16} />,
+                <div>
+                  {JSON.parse(dateTime)[index]}
+                </div>,
                 <Button
                 onClick={async () => {
                   buttonFunction(item.args[0])
@@ -73,7 +80,6 @@ export default function MessageInbox({ title, contracts, contractName, eventName
             >
               <div className="content">
                 {item.args[2]}
-                {item.blockNumber}
               </div>
             </List.Item>
           );

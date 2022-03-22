@@ -106,7 +106,6 @@ function App(props) {
       window.location.reload();
     }, 1);
   };
-  
 
   /* 💵 This hook will get the price of ETH from 🦄 Uniswap: */
   const price = useExchangeEthPrice(targetNetwork, mainnetProvider);
@@ -161,7 +160,6 @@ function App(props) {
   // If you want to call a function on a new block
   useOnBlock(mainnetProvider, () => {
     console.log(`⛓ A new mainnet block is here: ${mainnetProvider._lastBlockNumber}`);
-    console.log(`local block number: ${localProvider._lastBlockNumber}`);
   });
 
   // Then read your DAI balance like:
@@ -193,8 +191,7 @@ function App(props) {
     ) {
       console.log("_____________________________________ 🏗 scaffold-eth _____________________________________");
       console.log("� mainnetProvider", mainnetProvider);
-      console.log("🌎 localBlockTime", localProvider.getBlock(1));
-      console.log("�🏠 localChainId", localChainId);
+      console.log("� localChainId", localChainId);
       console.log("👩‍💼 selected address:", address);
       console.log("🕵🏻‍♂️ selectedChainId:", selectedChainId);
       console.log("💵 yourLocalBalance", yourLocalBalance ? ethers.utils.formatEther(yourLocalBalance) : "...");
