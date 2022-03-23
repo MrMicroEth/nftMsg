@@ -35,9 +35,10 @@ contract Messenger is ERC721, ERC721Burnable, Ownable {
     bool public paused = false;
     mapping(address => Message) public addressToMessage;
     uint256 public stringLimit = 175; //like a tweet
-    uint256 fee = 0;
+    uint256 public fee = 0;
     address public metaAddress;
     //enum messageStatus {active, read, deleted, archived }
+    uint public themeLimit;
 
     struct Message {
         bool optOut;
@@ -51,11 +52,11 @@ contract Messenger is ERC721, ERC721Burnable, Ownable {
     // public
     function mint(address _to, string memory _userText) public payable {
         bytes memory strBytes = bytes(_userText);
-        require(strBytes.length <= stringLimit, "String input exceeds limit.");
+        require(strBytes.length <= stringLimit, "String input exceeds message limit");
         require(addressToMessage[_to].optOut == false, "User has opted out of receiving messasges");
 
         if (msg.sender != owner()) {
-            require(msg.value >= fee);
+            require(msg.value >= fee, "eth value is below expected fee");
         }
 
         bool receiverHasNFT = addressToMessage[_to].sender != address(0);
@@ -73,6 +74,7 @@ contract Messenger is ERC721, ERC721Burnable, Ownable {
         //if the receiver doesn't have an NFT record yet, mint one
         if(!receiverHasNFT){
             uint256 tokenId = _tokenIdCounter.current();
+            require(tokenId < themeLimit, "Current theme limit is maxed out, please wait for new theme release");
             _tokenIdCounter.increment();
             _safeMint(_to, tokenId);
         }      
@@ -80,31 +82,17 @@ contract Messenger is ERC721, ERC721Burnable, Ownable {
         emit SentMessage(msg.sender, _to, _userText);
 
     }
+    
+    function increaseThemeLimit(uint _delta) external onlyOwner {
+        themeLimit += _delta;
+    }
+
+    function updateStringLimit(uint _newLimit) external onlyOwner {
+        stringLimit = _newLimit;
+    }
 
     function tokenSupply() public view returns(uint){
         return _tokenIdCounter.current();
-    }
-
-    function _beforeTokenTransfer(address from, address to, uint256 tokenId)
-        internal virtual override
-    {
-        super._beforeTokenTransfer(from, to, tokenId);
-        //if you transfer a message, transfer message to new user and update the from, delete senders message record
-        //console.log("tokenId exists", _exists(tokenId));
-        //console.log("current", _tokenIdCounter.current());
-        //Case: User is transferring NFT to user who already has one and we just need to update their message and sender.
-        //Case: User is transferring an existing NFT (didn't call mint) to user who doesn't have a message NFT and we need to update their message and sender.
-        bool minted = (from == address(0)); //!_exists(tokenId); //if token doesn't already exist, its being minted
-        if(!minted){
-            //console.log("We are transferring a token that isn't being minted");
-            //console.log(ownerOf(tokenId));
-            //console.log(msg.sender);
-            addressToMessage[to].value = addressToMessage[from].value;
-            addressToMessage[to].sender = from;
-            //delete(addressToMessage[from]); // could delete old data, or leave it to me updated upon next mint. Leaving it will make transferring more expensive and mionting cheaper next time.
-        }else {
-            //console.log("We are minting");
-        } 
     }
 
     function updateFee(uint _fee) external onlyOwner {
@@ -120,7 +108,6 @@ contract Messenger is ERC721, ERC721Burnable, Ownable {
         metaAddress =  _metaAddress;
     }
     
-
     function buildImage(uint256 _tokenId) private view returns (string memory) {
         Message memory currentMessage = addressToMessage[ownerOf(_tokenId)];
         //string memory owner = toAsciiString(currentMessage.sender);
