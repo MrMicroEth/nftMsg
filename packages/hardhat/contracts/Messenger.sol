@@ -39,7 +39,7 @@ contract Messenger is ERC721, ERC721Burnable, Ownable {
     address public genesisMetaAddress;
     address public metaAddress;
     //enum messageStatus {active, read, deleted, archived }
-    uint public themeLimit;
+    uint public genesisLimit;
 
     struct Message {
         bool optOut;
@@ -110,7 +110,7 @@ contract Messenger is ERC721, ERC721Burnable, Ownable {
     }
     
     function increaseThemeLimit(uint _delta) external onlyOwner {
-        themeLimit += _delta;
+        genesisLimit += _delta;
     }
 
     function updateStringLimit(uint _newLimit) external onlyOwner {
@@ -139,7 +139,7 @@ contract Messenger is ERC721, ERC721Burnable, Ownable {
     }
 
     function msgSenderIsGenesis() internal view returns (bool) {
-        return (addressToMessage[msg.sender].tokenId !=0 && addressToMessage[msg.sender].tokenId <= themeLimit);
+        return (addressToMessage[msg.sender].tokenId !=0 && addressToMessage[msg.sender].tokenId <= genesisLimit);
     }
     
     function buildImage(uint256 _tokenId) private view returns (string memory) {
