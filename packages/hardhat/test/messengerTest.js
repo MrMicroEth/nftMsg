@@ -30,10 +30,10 @@ describe("My Dapp", function () {
       console.log(image.address);
       messenger = await Messenger.deploy();
       
-      await messenger.setMetaAddress(image.address).then((tx) => tx.wait());
-      console.log("metaAddress set to:", await messenger.metaAddress());
+      await messenger.setGenesisMetaAddress(image.address).then((tx) => tx.wait());
+      console.log("genesisMetaAddress set to:", await messenger.genesisMetaAddress());
     });
-
+//add test transfer and genesis theme
     describe("mint()", function () {
 
       it("Should revert with a long message", async function () {
@@ -48,16 +48,6 @@ describe("My Dapp", function () {
         await messenger.connect(accounts[1]).changeOptOut();
       });
 
-      it("Should revert if mint exceeds the theme limit", async function () {
-        await expect(messenger.mint(accounts[1].address, message)).to.be.revertedWith("Current theme limit is maxed out, please wait for new theme release");
-      });
-
-      it("Should revert if fee is below limit", async function () {
-        await messenger.increaseThemeLimit(1);
-        await messenger.updateFee(1);
-        await expect(messenger.connect(accounts[1]).mint(accounts[1].address, message)).to.be.revertedWith("eth value is below expected fee");
-      });
-
       it("Should be able to mint a new NFT", async function () {
         expect(await messenger.balanceOf(accounts[1].address)).to.equal(0);
         await messenger.mint(accounts[1].address, message);
@@ -65,6 +55,12 @@ describe("My Dapp", function () {
         expect(await messenger.tokenSupply()).to.equal(1);
       });
 
+      it("Should revert if fee is below limit", async function () {
+      //  await messenger.increaseThemeLimit(1);
+        await messenger.updateFee(1);
+        await expect(messenger.connect(accounts[2]).mint(accounts[1].address, message)).to.be.revertedWith("eth value is below expected fee");
+      });
+      
       it("Should be able to modify a users NFT", async function () {
         expect(await messenger.balanceOf(accounts[1].address)).to.equal(1);
         message = "new shorter message";
