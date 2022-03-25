@@ -59,7 +59,7 @@ contract Messenger is ERC721, ERC721Burnable, Ownable {
 
         bool receiverHasNFT = addressToMessage[_to].tokenId != 0;
 
-        if (receiverHasNFT && !msgSenderIsGenesis() && msg.sender != owner()) {
+        if (receiverHasNFT && !isGenesis(msg.sender) && msg.sender != owner()) {
             require(msg.value >= fee, "eth value is below expected fee");
         }
 
@@ -89,7 +89,7 @@ contract Messenger is ERC721, ERC721Burnable, Ownable {
 
         
         
-        //Case: User is transferring an existing NFT (didn't call mint) to user who doesn't have a message NFT and we need to transfer their message date.
+        //Case: User is transferring an existing NFT (didn't call mint) 
         if(!minting){
             //Case: User is transferring NFT to user who already has one and we will prevent them in case it overwites a genesis theme
             require(addressToMessage[to].tokenId == 0, "Wallet already has a Message and can only have one, please burn or transfer the old message first");
@@ -138,15 +138,15 @@ contract Messenger is ERC721, ERC721Burnable, Ownable {
         metaAddress =  _metaAddress;
     }
 
-    function msgSenderIsGenesis() internal view returns (bool) {
-        return (addressToMessage[msg.sender].tokenId !=0 && addressToMessage[msg.sender].tokenId <= genesisLimit);
+    function isGenesis(address _address) public view returns (bool) {
+        return (addressToMessage[_address].tokenId !=0 && addressToMessage[_address].tokenId <= genesisLimit);
     }
     
     function buildImage(uint256 _tokenId) private view returns (string memory) {
         Message memory currentMessage = addressToMessage[ownerOf(_tokenId)];
         //string memory owner = toAsciiString(currentMessage.sender);
         messengerImage mymessengerImage = messengerImage(metaAddress);
-        if(metaAddress == address(0) || msgSenderIsGenesis()){
+        if(metaAddress == address(0) || isGenesis(msg.sender)){
             mymessengerImage = messengerImage(genesisMetaAddress);
         }
         return mymessengerImage.buildImage(_tokenId, currentMessage.value, currentMessage.sender);

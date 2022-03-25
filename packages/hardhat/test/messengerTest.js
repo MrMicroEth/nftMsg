@@ -55,7 +55,7 @@ describe("My Dapp", function () {
         expect(await messenger.tokenSupply()).to.equal(1);
       });
 
-      it("Should revert if fee is below limit", async function () {
+      it("Should revert if fee is below limit for non owner or genisis holder", async function () {
       //  await messenger.increaseThemeLimit(1);
         await messenger.updateFee(1);
         await expect(messenger.connect(accounts[2]).mint(accounts[1].address, message)).to.be.revertedWith("eth value is below expected fee");
@@ -80,6 +80,40 @@ describe("My Dapp", function () {
           value: ethers.utils.parseEther("2.0")
         });
         expect(await messenger.tokenSupply()).to.equal(2);
+      });
+
+      it("Should be able to mint for free for genesis holder", async function () {
+        expect(await messenger.isGenesis(accounts[2].address)).to.equal(true);
+        await messenger.connect(accounts[2]).mint(accounts[3].address, message);
+        expect(await messenger.tokenSupply()).to.equal(3);
+        expect(await messenger.isGenesis(accounts[3].address)).to.equal(true);
+      });
+    });
+    describe("Transfer()", function () {
+
+      it("Should be able to transfer genesis message AND status", async function () {
+        //accounts 1,2,3 are all genesis holders, lets move them around and test
+        expect(await messenger.isGenesis(accounts[4].address)).to.equal(false);
+        await messenger.connect(accounts[2]).transferFrom(accounts[2].address, accounts[4].address, 2);
+        expect(await messenger.tokenSupply()).to.equal(3);
+        expect(await messenger.isGenesis(accounts[4].address)).to.equal(true);
+        expect(await messenger.isGenesis(accounts[2].address)).to.equal(false);
+      });
+
+      it("Should revert when transfering to a user who already has a message", async function () {
+        await expect(messenger.connect(accounts[4]).transferFrom(accounts[4].address, accounts[3].address, 2)).to.be.revertedWith("Wallet already has a Message and can only have one, please burn or transfer the old message first");
+      });
+    });
+
+    describe("burn()", function () {
+      it("should burn a token and not break minting", async function () {
+        //accounts 1,4,3 are all genesis holders, lets move them around and test
+        expect(await messenger.tokenSupply()).to.equal(3);
+        await messenger.connect(accounts[1]).burn(1);
+        expect(await messenger.isGenesis(accounts[1].address)).to.equal(false);
+        await messenger.mint(accounts[1].address, message);
+        expect(await messenger.ownerOf(4)).to.equal(accounts[1].address);
+        expect(await messenger.tokenSupply()).to.equal(4);
       });
     });
 
