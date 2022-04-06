@@ -57,9 +57,8 @@ contract Messenger is ERC721, ERC721Burnable, Ownable {
         require(strBytes.length <= stringLimit, "String input exceeds message limit");
         require(addressToMessage[_to].optOut == false, "User has opted out of receiving messasges");
 
-        bool receiverHasNFT = addressToMessage[_to].tokenId != 0;
 
-        if (receiverHasNFT && !isGenesis(msg.sender) && msg.sender != owner()) {
+        if (userHasNFT(_to) && !isGenesis(msg.sender) && msg.sender != owner()) {
             require(msg.value >= fee, "eth value is below expected fee");
         }
 
@@ -68,7 +67,7 @@ contract Messenger is ERC721, ERC721Burnable, Ownable {
         addressToMessage[_to].value = _userText; 
 
         //if the receiver doesn't have an NFT record yet, mint one
-        if(!receiverHasNFT){
+        if(!userHasNFT(_to)){
             _tokenIdCounter.increment();
             uint256 _tokenId = _tokenIdCounter.current();
             addressToMessage[_to].tokenId = _tokenId; 
@@ -78,10 +77,10 @@ contract Messenger is ERC721, ERC721Burnable, Ownable {
         emit SentMessage(msg.sender, _to, _userText);
     }
 
-    function _beforeTokenTransfer(address from, address to, uint256 tokenId)
+    function _beforeTokenTransfer(address from, address _to, uint256 tokenId)
         internal virtual override
     {
-        super._beforeTokenTransfer(from, to, tokenId);
+        super._beforeTokenTransfer(from, _to, tokenId);
         //if you transfer a message, transfer message to new user and update the from, delete senders message record
         //console.log("tokenId exists", _exists(tokenId));
         //console.log("current", _tokenIdCounter.current());
@@ -92,14 +91,14 @@ contract Messenger is ERC721, ERC721Burnable, Ownable {
         //Case: User is transferring an existing NFT (didn't call mint) 
         if(!minting){
             //Case: User is transferring NFT to user who already has one and we will prevent them in case it overwites a genesis theme
-            require(addressToMessage[to].tokenId == 0, "Wallet already has a Message and can only have one, please burn or transfer the old message first");
+            require(!userHasNFT(_to), "Wallet already has a Message and can only have one, please burn or transfer the old message first");
             //console.log("We are transferring a token that isn't being minted");
             //console.log(ownerOf(tokenId));
             //console.log(msg.sender);
             //bool optOut = addressToMessage[to].optOut;
             //addressToMessage[to] = addressToMessage[from];
             //addressToMessage[to].optOut = optOut; 
-            addressToMessage[to].tokenId = addressToMessage[from].tokenId;
+            addressToMessage[_to].tokenId = addressToMessage[from].tokenId;
 
             bool optOut = addressToMessage[from].optOut;
             delete addressToMessage[from]; // could delete old data, or leave it to me updated upon next mint. Leaving it will make transferring more expensive and mionting cheaper next time.
@@ -123,6 +122,10 @@ contract Messenger is ERC721, ERC721Burnable, Ownable {
 
     function updateFee(uint _fee) external onlyOwner {
         fee = _fee;
+    }
+
+    function userHasNFT(address _to) public view returns(bool) {
+        return addressToMessage[_to].tokenId != 0;
     }
 
     function changeOptOut() public {

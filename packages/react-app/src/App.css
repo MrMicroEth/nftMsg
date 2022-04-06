@@ -81,6 +81,10 @@ textarea.ant-input::placeholder, input.ant-input::placeholder{
   border-radius: 5px 5px 5px 0px;
   display: inline-block;
 }
+
+span.ant-page-header-heading-title{
+  color: rgb(0,168, 255);
+}
  
 
 .messageList .ant-list-items .ant-list-item, .messageList .ant-list-split.ant-list-something-after-last-item .ant-spin-container > .ant-list-items > .ant-list-item:last-child, .ant-transfer-customize-list .ant-table-wrapper .ant-table-small > .ant-table-content .ant-table-row:last-child {

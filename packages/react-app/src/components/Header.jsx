@@ -6,8 +6,8 @@ import React from "react";
 export default function Header() {
   return (
       <PageHeader
-        title="✉️jpegMessageMe"
-        subTitle="Send Messages as NFTs, On-Chain"
+        title="📨️ jpegMe"
+        subTitle="send NFT messages on-chain"
         style={{ cursor: "pointer" }}
       />
   );

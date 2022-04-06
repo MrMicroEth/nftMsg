@@ -77,9 +77,9 @@ contract MessengerImage is Ownable {
             return(message,line);
         }
 
-        string constant svg1 = '<svg xmlns="http://www.w3.org/2000/svg" width="350" height="350"> <style> .text { font-family: "Source Code Pro",monospace; font-size: 14px; text-wrap:200px; } .sender {font-size: 20px; font-weight:bold} .msgText{fill: white; } .reply {stroke-width:1;stroke:url(#grad1);fill:white} .fill {fill:url(#grad1)} </style> <rect width="100%" height="100%" fill="white" /> <defs> <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="0%"> <stop offset="0%" style="stop-color:#0066cc;stop-opacity:0.9" /> <stop offset="100%" style="stop-color:blue;stop-opacity:0.6" /> </linearGradient> </defs> <rect class="fill" width="320" height="200" x="15" y="15" rx="10" ry="10" /> ';
-        string constant svg2 = '<polygon points="320,215 300,215 297,230" style="fill:blue;fill-opacity:0.6" /> <text class="text sender fill" x="320" y="250"  text-anchor="end" >';
-        string constant svg3 = '</text> <a href="https://www.jpegMessage.me" target="_blank"> <rect class="reply" width="320" height="30" x="15" y="300" rx="5" ry="5" /> <text class="text fill" x="30" y="320" font-style="italic" >Reply @ jpegMessage.Me</text> <text class="fill text sender" x="325" y="321" text-anchor="end" >></text> </a> </svg>';
+        string constant svg1 = '<svg xmlns="http://www.w3.org/2000/svg" width="350" height="350">  <style>  .text { font-family: "Source Code Pro",monospace; font-size: 14px; text-wrap:200px; } .sender {font-size: 20px; font-weight:bold} .msgText{fill: white; } .reply {stroke-width:1;stroke:rgb(0,168,255); fill:white} .fill {fill:url(#grad1)} </style>  <rect width="100%" height="100%" fill="white" />    <defs>     <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="0%">       <stop offset="0%" style="stop-color:rgb(58, 208, 91 )" />       <stop offset="100%" style="stop-color:rgb(0,168,255)" />     </linearGradient>   </defs>  <rect class="fill" width="320" height="200" x="15" y="15" rx="10" ry="10" />';
+        string constant svg2 = '<polygon points="320,215 300,215 297,230" style="fill:rgb(0,168,255)" /> <text class="text sender fill" x="320" y="250"  text-anchor="end" >';
+        string constant svg3 = '</text> <a href="https://www.jpegMessage.me" target="_blank"> <rect class="reply" width="320" height="30" x="15" y="300" rx="5" ry="5" /> <text class="text" fill="rgb(0,168,255)" x="30" y="320" font-weight="bold" font-style="italic" >Reply online @ jpegMe.xyz</text> <text class="text sender" fill="rgb(0,168,255)" x="325" y="321" text-anchor="end" >></text></a></svg>';
         string constant text1 = '<text x="27" y="40" class="msgText text">';
         string constant text2 = '<text x="27" y="60" class="msgText text">';
         string constant text3 = '<text x="27" y="80" class="msgText text">';
@@ -146,6 +146,7 @@ contract MessengerImage is Ownable {
                     )
                 )
             );
+        console.log("image data");
         console.log( "data:image/svg+xml;base64,%s",image);        
         return image;
     }

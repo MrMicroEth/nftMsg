@@ -69,6 +69,7 @@
   },
   "dependencies": {},
   "devDependencies": {
-    "husky": "^7.0.2"
+    "husky": "^7.0.2",
+    "rollup-plugin-terser": "^7.0.2"
   }
 }
