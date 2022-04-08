@@ -20,7 +20,7 @@ import React, { useEffect, useState } from "react";
   />
 */
 
-export default function SentMessages({ title, contracts, contractName, eventName, localProvider, mainnetProvider, startBlock, buttonFunction }) {
+export default function SentMessages({ contracts, contractName, eventName, localProvider, mainnetProvider, startBlock, buttonFunction }) {
   // 📟 Listen for broadcast events
   const events = useEventListener(contracts, contractName, eventName, localProvider, startBlock).slice().reverse();
 
@@ -50,7 +50,6 @@ export default function SentMessages({ title, contracts, contractName, eventName
   
   return (
     <div className="messageList" >
-      <h2>{title}</h2>
       <List
         pagination={{
           onChange: page => {

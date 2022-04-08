@@ -21,7 +21,7 @@ import { exit } from "process";
 */
 
 
-export default function MessageInbox({ title, contracts, contractName, eventName, localProvider, mainnetProvider, startBlock, buttonFunction}) {
+export default function MessageInbox({ contracts, contractName, eventName, localProvider, mainnetProvider, startBlock, buttonFunction}) {
   // 📟 Listen for broadcast events
   let events = useEventListener(contracts, contractName, eventName, localProvider, startBlock).slice().reverse();
 
@@ -50,7 +50,6 @@ export default function MessageInbox({ title, contracts, contractName, eventName
 
   return (
     <div className="messageList" >
-      <h2>{title}</h2>
       <List
         pagination={{
           onChange: page => {

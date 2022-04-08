@@ -256,6 +256,12 @@ function App(props) {
         logoutOfWeb3Modal={logoutOfWeb3Modal}
         USE_NETWORK_SELECTOR={USE_NETWORK_SELECTOR}
       />
+      <Switch>
+        <Route exact path="/">
+          {/* pass in any web3 props to this Home component. For example, yourLocalBalance */}
+          <Home yourLocalBalance={yourLocalBalance} readContracts={readContracts} />
+        </Route>
+        <Route exact path="/app">
           <ExampleUI
             address={address}
             userSigner={userSigner}
@@ -268,6 +274,8 @@ function App(props) {
             readContracts={readContracts}
             //purpose={purpose}
           />
+        </Route>
+        </Switch>
           
       <ThemeSwitch />
 

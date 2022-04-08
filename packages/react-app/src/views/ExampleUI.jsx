@@ -21,6 +21,7 @@ export default function ExampleUI({
   const [newAddress, setNewAddress] = useState();
   const [SVG, setSVG] = useState("");
   const [show, setShow] = useState(true);
+  const usePreview = false; //set this to true to update and show the SVG graphic live from the contract
 
   
   useEffect(() => {
@@ -38,7 +39,7 @@ export default function ExampleUI({
     //console.log(newSVG);
     //setShow(false);
     };
-    //updateSVG(); //uncomment this to use this function
+    if(usePreview) updateSVG(); //uncomment this to use this function
   }, [newAddress, newMessage, readContracts]);
 
 
@@ -93,11 +94,9 @@ export default function ExampleUI({
             Send
           </Button>
         </div>
-        {/* This shows a preview of the image manifested from the contract
-        <div className = "imageDiv" >
-          <img id="preview" src={SVG} style={{ display: show ? "block" : "none" }} alt="NFT Message" />
+        <div className = "imageDiv" style={{ display: usePreview && show ? "block" : "none" }}>
+          <img id="preview" src={SVG}  alt="NFT Message" />
         </div>
-          */}
       </div>
 
       {/*
@@ -113,8 +112,8 @@ export default function ExampleUI({
         startBlock={1}
       />
      */}
+      <h2 class= "title">Received</h2>
       <MessageInbox
-        title = "Received"
         contracts={readContracts}
         contractName="Messenger"
         eventName={readContracts.Messenger? readContracts.Messenger.filters.SentMessage(null, address) : null}
@@ -123,8 +122,8 @@ export default function ExampleUI({
         startBlock={1}
         buttonFunction={setNewAddress}
       />
+      <h2 class= "title">Sent</h2>
       <SentMessages
-        title = "Sent"
         contracts={readContracts}
         contractName="Messenger"
         localProvider={localProvider}

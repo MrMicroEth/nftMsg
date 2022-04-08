@@ -4,6 +4,29 @@
   font-size: '16px';
 }
 
+span.ant-page-header-heading-title, h2.title{
+  font-family: 'Press Start 2P';
+  color: rgb(58, 208, 91 );
+  color: rgb(0,168, 255);
+}
+
+h2.link{
+  font-family: 'Press Start 2P';
+  color: rgb(58, 208, 91 );
+  font-size: 15px;
+  margin-top: 40px;
+  border: 1px solid rgb(58, 208, 91 );
+  border-radius: 10px;
+}
+
+.info {
+ flex:1;
+ font-weight: 500;
+ font-size: 16px;
+  text-align: center;
+  margin-top: 50px;
+}
+
 h2 {
   text-align: center;
 }
