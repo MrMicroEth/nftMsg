@@ -132,7 +132,7 @@ export default function Account({
   );
 
   return (
-    <div>
+    <div style={{display:"flex", alignItems:"center"}}>
       {display}
       {modalButtons}
     </div>

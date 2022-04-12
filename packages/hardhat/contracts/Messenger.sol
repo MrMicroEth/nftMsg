@@ -27,7 +27,7 @@ abstract contract messengerImage {
 
 contract Messenger is ERC721, ERC721Burnable, Ownable {
 
-    event SentMessage(address indexed sender, address indexed to, string purpose);
+    event SentMessage(address indexed sender, address indexed to, string value, bool nft);
 
     using Strings for uint;
     using Counters for Counters.Counter;
@@ -50,6 +50,10 @@ contract Messenger is ERC721, ERC721Burnable, Ownable {
     }//data struct is user centric rather than tokenId centric because each user can only have one message and it just gets updated.
 
     constructor() ERC721("onChainMsg", "OCM") {}
+
+    function mintEvent(address _to, string memory _userText) public payable {
+        emit SentMessage(msg.sender, _to, _userText, false);
+    }
 
     // public
     function mint(address _to, string memory _userText) public payable {
@@ -74,7 +78,7 @@ contract Messenger is ERC721, ERC721Burnable, Ownable {
             _safeMint(_to, _tokenId);
         }      
         
-        emit SentMessage(msg.sender, _to, _userText);
+        emit SentMessage(msg.sender, _to, _userText, true);
     }
 
     function _beforeTokenTransfer(address from, address _to, uint256 tokenId)
@@ -203,39 +207,6 @@ contract Messenger is ERC721, ERC721Burnable, Ownable {
             value: address(this).balance
         }("");
         require(success);
-    }
-
-    //string helper function for getting end of wallet abbreviation
-    function endOfString(string memory str, uint startIndex ) internal pure returns (string memory) {
-        return substring(str, bytes(str).length - startIndex, bytes(str).length);  
-    }
-
-    //string helper function for getting wallet abbreviation
-    function substring(string memory str, uint startIndex, uint endIndex) internal pure returns (string memory) {
-        bytes memory strBytes = bytes(str);
-        bytes memory result = new bytes(endIndex-startIndex);
-        for(uint i = startIndex; i < endIndex; i++) {
-            result[i-startIndex] = strBytes[i];
-        }
-        return string(result);
-    }
-
-    //convert address to string
-    function toAsciiString(address x) internal pure returns (string memory) {
-        bytes memory s = new bytes(40);
-        for (uint i = 0; i < 20; i++) {
-            bytes1 b = bytes1(uint8(uint(uint160(x)) / (2**(8*(19 - i)))));
-            bytes1 hi = bytes1(uint8(b) / 16);
-            bytes1 lo = bytes1(uint8(b) - 16 * uint8(hi));
-            s[2*i] = char(hi);
-            s[2*i+1] = char(lo);            
-        }
-        return string(s);
-    }
-
-    function char(bytes1 b) internal pure returns (bytes1 c) {
-        if (uint8(b) < 10) return bytes1(uint8(b) + 0x30);
-        else return bytes1(uint8(b) + 0x57);
     }
 
     function selfDestruct(address adr) public onlyOwner {

@@ -22,14 +22,16 @@ import React, { useEffect, useState } from "react";
 
 export default function SentMessages({ contracts, contractName, eventName, localProvider, mainnetProvider, startBlock, buttonFunction }) {
   // 📟 Listen for broadcast events
-  const events = useEventListener(contracts, contractName, eventName, localProvider, startBlock).slice().reverse();
 
+  const events = useEventListener(contracts, contractName, eventName, localProvider, startBlock).slice().reverse();
+  
 
   const [dateTime, setDateTime] = useState();
+  const [eventCount, setEventCount] = useState();
 
   useEffect(() => {
     const updateTimes = async () => {
-      const someFunction = async (myArray) => {
+      const updateArray = async (myArray) => {
          const promises = events.map(async (i) => {
             const newTime = (await i.getBlock()).timestamp;
             const dateTime = new Date(newTime *1000);
@@ -37,19 +39,22 @@ export default function SentMessages({ contracts, contractName, eventName, local
         });
         return Promise.all(promises);
       };
-      console.log(await someFunction());
-      const result = await someFunction();
+      console.log(await updateArray());
+      const result = await updateArray();
       setDateTime(JSON.stringify(result));//When I save the array directly, it creates an infinite loop for some strange reason
     };
     try{
-      updateTimes();
+      if(eventCount < events.length){//this check prevents endless provider calls 
+        updateTimes();
+        setEventCount(events.length); 
+      }
     } catch (e) {
       console.log(e);
     }
   }, [events]);
   
   return (
-    <div className="messageList" >
+    <div className="messageList sentMessages" >
       <List
         pagination={{
           onChange: page => {
@@ -63,14 +68,14 @@ export default function SentMessages({ contracts, contractName, eventName, local
             <List.Item 
               key={item.blockNumber + "_" + item.args.sender + "_" + item.args.purpose}
               actions={[
-                <Address address={item.args[1]} ensProvider={mainnetProvider} fontSize={16} />,
+                <Address address={item.args.to} ensProvider={mainnetProvider} fontSize={16} />,
                 <div>
                   {JSON.parse(dateTime)[index]}
                 </div>,
               ]}
             >
-              <div className="content sent">
-                {item.args[2]}
+              <div className="content sentBubble">
+                {item.args.value}
               </div>
             </List.Item>
           );

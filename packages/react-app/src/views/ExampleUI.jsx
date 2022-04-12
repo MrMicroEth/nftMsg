@@ -23,7 +23,6 @@ export default function ExampleUI({
   const [show, setShow] = useState(true);
   const usePreview = false; //set this to true to update and show the SVG graphic live from the contract
 
-  
   useEffect(() => {
     const updateSVG = async () => {
     let newSVG = "";
@@ -41,7 +40,6 @@ export default function ExampleUI({
     };
     if(usePreview) updateSVG(); //uncomment this to use this function
   }, [newAddress, newMessage, readContracts]);
-
 
   return (
     <div id="container">
@@ -112,7 +110,7 @@ export default function ExampleUI({
         startBlock={1}
       />
      */}
-      <h2 class= "title">Received</h2>
+      <h2 className= "title">Received</h2>
       <MessageInbox
         contracts={readContracts}
         contractName="Messenger"
@@ -122,7 +120,7 @@ export default function ExampleUI({
         startBlock={1}
         buttonFunction={setNewAddress}
       />
-      <h2 class= "title">Sent</h2>
+      <h2 className= "title">Sent</h2>
       <SentMessages
         contracts={readContracts}
         contractName="Messenger"

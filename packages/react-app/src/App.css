@@ -10,15 +10,6 @@ span.ant-page-header-heading-title, h2.title{
   color: rgb(0,168, 255);
 }
 
-h2.link{
-  font-family: 'Press Start 2P';
-  color: rgb(58, 208, 91 );
-  font-size: 15px;
-  margin-top: 40px;
-  border: 1px solid rgb(58, 208, 91 );
-  border-radius: 10px;
-}
-
 .info {
  flex:1;
  font-weight: 500;
@@ -72,7 +63,6 @@ h2 {
   border:none;
 }
 
-
 #inputBox{
   border:2px solid rgb(43, 43, 43);
   border:none;
@@ -81,10 +71,23 @@ h2 {
   border-radius:5px;
 }
 
-button.ant-btn{
+button.ant-btn, a.ant-btn{
   border:none;
-  background: #d2d2d2;
+  border: 1px solid rgb(58, 208, 91 );
   color: rgba(0, 0, 0, 0.85);
+  color: rgb(58, 208, 91 );
+  font-family:"Press Start 2P" ;
+  font-size: 12px;
+  padding: 2px 8px;
+}
+
+a.ant-btn{
+  margin-top:50px;
+  font-size: 16px;
+}
+
+input.ant-input{
+  color:black;
 }
 
 textarea.ant-input{
@@ -105,6 +108,10 @@ textarea.ant-input::placeholder, input.ant-input::placeholder{
   display: inline-block;
 }
 
+.sentBubble {
+  border-radius: 5px 5px 0px 5px;
+}
+
 span.ant-page-header-heading-title{
   color: rgb(0,168, 255);
 }
@@ -114,14 +121,14 @@ span.ant-page-header-heading-title{
   border-bottom: none;
 }
 
-.ant-list-item span {
-  margin-right: 4px;
-}
-
-
 .ant-list-item button {
   margin-right: 14px;
 }
 
 canvas.identicon {
+  display: none;
+}
+
+.sentMessages .ant-list-vertical .ant-list-item{
+  text-align: right;
 }

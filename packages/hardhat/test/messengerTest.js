@@ -36,6 +36,10 @@ describe("My Dapp", function () {
 //add test transfer and genesis theme
     describe("mint()", function () {
 
+      it("Should mint event only", async function () {
+        await messenger.mintEvent(accounts[1].address, longMessage);
+      });
+
       it("Should revert with a long message", async function () {
         await expect(messenger.mint(accounts[1].address, longMessage)).to.be.revertedWith("String input exceeds message limit");
       });

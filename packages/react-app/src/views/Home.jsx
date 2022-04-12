@@ -1,4 +1,5 @@
 import React from "react";
+import { Button } from "antd";
 import { Link } from "react-router-dom";
 import { useContractReader } from "eth-hooks";
 import { ethers } from "ethers";
@@ -26,22 +27,24 @@ function Home({ yourLocalBalance, readContracts }) {
         </div>
         <div class="info" >
           <Link to="/app">
-          <h2 class = "title" >Send NFT Messages</h2>
+          <h2 className = "title" >Send NFT Messages</h2>
           </Link>
           Need to send a message to a wallet owner? Send them a message as a NFT Image! Messages are stored 100% on-chain. 
         </div>
-        <div class="info" >
+        <div className="info" >
           <Link to="/app">
-          <h2 class = "title" >Browse Your Messages</h2>
+          <h2 className = "title" >Browse Your Messages</h2>
           </Link>
           View messages that you have sent and recieved. Easily reply to messages from other users.
         </div>
-        <div class="info" >
+        <div className="info" >
           <Link to="/app">
-          <h2 class = "title" >Mint a Genesis Theme</h2>
+          <h2 className = "title" >Mint a Genesis Theme</h2>
           </Link>
           The first 1000 wallets to RECEIVE a message will get a limited edition Genesis theme and lower fees.
-          <Link to="/app"><h2 class = "link">Try it Now ></h2></Link> 
+          <Button type = "button" href = "/app">
+          Try it Now >
+          </Button>
         </div>
       </div>
     </div>
