@@ -27,7 +27,7 @@ export default function SentMessages({ contracts, contractName, eventName, local
   
 
   const [dateTime, setDateTime] = useState();
-  const [eventCount, setEventCount] = useState();
+  const [eventCount, setEventCount] = useState(0);
 
   useEffect(() => {
     const updateTimes = async () => {
@@ -44,7 +44,7 @@ export default function SentMessages({ contracts, contractName, eventName, local
       setDateTime(JSON.stringify(result));//When I save the array directly, it creates an infinite loop for some strange reason
     };
     try{
-      if(eventCount < events.length){//this check prevents endless provider calls 
+      if(events.length && eventCount < events.length){//this check prevents endless provider calls 
         updateTimes();
         setEventCount(events.length); 
       }
@@ -70,7 +70,7 @@ export default function SentMessages({ contracts, contractName, eventName, local
               actions={[
                 <Address address={item.args.to} ensProvider={mainnetProvider} fontSize={16} />,
                 <div>
-                  {JSON.parse(dateTime)[index]}
+                  {dateTime? JSON.parse(dateTime)[index] : ""}
                 </div>,
               ]}
             >
