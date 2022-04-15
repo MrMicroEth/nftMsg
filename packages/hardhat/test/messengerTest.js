@@ -37,7 +37,8 @@ describe("My Dapp", function () {
     describe("mint()", function () {
 
       it("Should mint event only", async function () {
-        await messenger.mintEvent(accounts[1].address, longMessage);
+        await expect(messenger.mintEvent(accounts[1].address, message)).to.not.be.revertedWith("something");
+        await expect(messenger.mint(accounts[1].address, longMessage)).to.be.revertedWith("String input exceeds message limit");
       });
 
       it("Should revert with a long message", async function () {
@@ -80,10 +81,12 @@ describe("My Dapp", function () {
         await messenger.updateFee(ethers.utils.parseEther("2.0"));
         expect(ethers.utils.formatEther(await messenger.fee())).to.equal("2.0");
         await messenger.increaseThemeLimit(10);
+        message = "Send a NFT message to any wallet completely on chain!";
         await messenger.connect(accounts[1]).mint(accounts[2].address, message, {
           value: ethers.utils.parseEther("2.0")
         });
         expect(await messenger.tokenSupply()).to.equal(2);
+        await messenger.tokenURI(2);
       });
 
       it("Should be able to mint for free for genesis holder", async function () {

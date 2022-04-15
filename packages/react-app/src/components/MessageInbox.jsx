@@ -25,7 +25,7 @@ export default function MessageInbox({ contracts, contractName, eventName, local
   // 📟 Listen for broadcast events
   const events = useEventListener(contracts, contractName, eventName, localProvider, startBlock).slice().reverse();
 
-  const [dateTime, setDateTime] = useState("");
+  const [dateTime, setDateTime] = useState();
   const [eventCount, setEventCount] = useState(0);
 
   useEffect(() => {

@@ -132,3 +132,11 @@ canvas.identicon {
 .sentMessages .ant-list-vertical .ant-list-item{
   text-align: right;
 }
+
+.mintWithNFT {
+  margin:15px;
+}
+
+.mintWithNFT button {
+  margin:3px;
+}

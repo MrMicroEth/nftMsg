@@ -20,6 +20,7 @@ import {
   Header,
   Ramp,
   ThemeSwitch,
+  MintSwitch,
   NetworkDisplay,
   FaucetHint,
   NetworkSwitch,
@@ -29,7 +30,7 @@ import externalContracts from "./contracts/external_contracts";
 // contracts
 import deployedContracts from "./contracts/hardhat_contracts.json";
 import { Transactor, Web3ModalSetup } from "./helpers";
-import { Home, ExampleUI, Hints, Subgraph } from "./views";
+import { Home, AppUI, Hints, Subgraph } from "./views";
 import { useStaticJsonRPC } from "./hooks";
 
 const { ethers } = require("ethers");
@@ -262,7 +263,7 @@ function App(props) {
           <Home yourLocalBalance={yourLocalBalance} readContracts={readContracts} />
         </Route>
         <Route exact path="/app">
-          <ExampleUI
+          <AppUI
             address={address}
             userSigner={userSigner}
             mainnetProvider={mainnetProvider}
@@ -277,6 +278,7 @@ function App(props) {
         </Route>
         </Switch>
           
+
       <ThemeSwitch />
 
       {/* 👨‍💼 Your account is in the top right with a wallet at connect options */}

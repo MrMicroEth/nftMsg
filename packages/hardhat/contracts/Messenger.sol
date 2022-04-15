@@ -52,6 +52,7 @@ contract Messenger is ERC721, ERC721Burnable, Ownable {
     constructor() ERC721("onChainMsg", "OCM") {}
 
     function mintEvent(address _to, string memory _userText) public payable {
+        require(addressToMessage[_to].optOut == false, "User has opted out of receiving messasges");
         emit SentMessage(msg.sender, _to, _userText, false);
     }
 
