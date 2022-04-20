@@ -1,0 +1,37 @@
+ <svg xmlns="http://www.w3.org/2000/svg" width="350" height="350">
+ 
+ <style> 
+ .text { font-family: "Source Code Pro",monospace; font-size: 14px; text-wrap:200px; }
+ .sender {font-size: 20px; font-weight:bold}
+ .msgText{fill: white; }
+ .reply {stroke-width:1;stroke:rgb(0,168,255);fill:white}
+ .fill {fill:url(#grad1)}
+ </style>
+ 
+ <rect width="100%" height="100%" fill="white" />
+ 
+   <defs>
+     <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="0%">
+       <stop offset="0%" style="stop-color:rgb(58, 208, 91 )" />
+       <stop offset="100%" style="stop-color:rgb(0,168,255)" />
+     </linearGradient>
+   </defs>
+  
+<rect class="fill" width="320" height="200" x="15" y="15" rx="10" ry="10" />
+
+<text x="27" y="40" class="msgText text">Hey this is thDeployer guy was able</text>
+<text x="27" y="60" class="msgText text">Continuing the text is what I do be</text>
+<text x="27" y="80" class="msgText text">Continuing th Deployer guy was devm</text>
+<text x="27" y="100" class="msgText text">Deployer guy was able to mint</text>
+ 
+ <polygon points="320,215 300,215 297,230" style="fill:rgb(0,168,255)" />
+
+ <text class="text sender fill" x="320" y="250"  text-anchor="end" >
+ Royce.eth</text>
+ 
+ <a href="https://www.jpegMessage.me" target="_blank">
+ <rect class="reply" width="320" height="30" x="15" y="300" rx="5" ry="5" />
+ <text class="text" fill="rgb(0,168,255)" x="30" y="320" font-weight="bold" font-style="italic" >Reply online @ jpegMe.xyz</text>
+ <text class="text sender" fill="rgb(0,168,255)" x="325" y="321" text-anchor="end" >></text>
+</a>
+</svg>
