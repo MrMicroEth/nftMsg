@@ -1,8 +1,7 @@
-import { List, Button, space } from "antd";
+import { List, Button } from "antd";
 import { useEventListener } from "eth-hooks/events/useEventListener";
 import { Address } from ".";
 import React, { useEffect, useState } from "react";
-import { exit } from "process";
 /*
   ~ What it does? ~
 
@@ -20,8 +19,7 @@ import { exit } from "process";
   />
 */
 
-
-export default function MessageInbox({ contracts, contractName, eventName, localProvider, mainnetProvider, startBlock, buttonFunction}) {
+export default function MessageInbox({ contracts, contractName, eventName, localProvider, mainnetProvider, startBlock, buttonFunction }) {
   // 📟 Listen for broadcast events
   const events = useEventListener(contracts, contractName, eventName, localProvider, startBlock).slice().reverse();
 
@@ -30,11 +28,11 @@ export default function MessageInbox({ contracts, contractName, eventName, local
 
   useEffect(() => {
     const updateTimes = async () => {
-      const updateArray = async (myArray) => {
-         const promises = events.map(async (i) => {
-            const newTime = (await i.getBlock()).timestamp;
-            const dateTime = new Date(newTime *1000);
-            return dateTime.toLocaleString();
+      const updateArray = async myArray => {
+        const promises = events.map(async i => {
+          const newTime = (await i.getBlock()).timestamp;
+          const dateTime = new Date(newTime *1000);
+          return dateTime.toLocaleString();
         });
         return Promise.all(promises);
       };
@@ -43,14 +41,14 @@ export default function MessageInbox({ contracts, contractName, eventName, local
       setDateTime(JSON.stringify(result));//When I save the array directly, it creates an infinite loop for some strange reason
     };
     try{
-      if(events.length && eventCount < events.length){//this check prevents endless provider calls 
+      if (events.length && eventCount < events.length){ //this check prevents endless provider calls 
         updateTimes();
         setEventCount(events.length); 
       }
     } catch (e) {
       console.log(e);
     }
-  }, [events]);
+  }, [events, eventCount]);
 
   return (
     <div className="messageList" >
@@ -73,11 +71,11 @@ export default function MessageInbox({ contracts, contractName, eventName, local
                   {dateTime? JSON.parse(dateTime)[index] : ""}
                 </div>,
                 <Button
-                onClick={async () => {
-                  buttonFunction(item.args.sender)
-                }}
+                  onClick={async () => {
+                    buttonFunction(item.args.sender);
+                  }}
                 >
-                Reply
+                  Reply
                 </Button>,
               ]}
             >

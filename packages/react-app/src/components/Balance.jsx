@@ -51,8 +51,7 @@ export default function Balance(props) {
 
   if (dollarMode) {
     displayBalance = "$" + (floatBalance * price).toFixed(2);
-  }
-  else {
+  } else {
     displayBalance = "Ξ" + displayBalance;
   }
 

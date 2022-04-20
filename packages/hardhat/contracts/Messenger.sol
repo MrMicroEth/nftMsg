@@ -1,69 +1,69 @@
-//__/\\\\\\\\\\\\\\\_________________________________________________________________________________/\\\\\\\\\______/\\\\\\\\\\\\____
-// _\/\\\///////////________________________________________________________________________________/\\\///////\\\___\/\\\////////\\\__
-//___\/\\\_____________________________/\\\\\\\\___/\\\_____________________________________________\/\\\_____\/\\\___\/\\\______\//\\\_
-//____\/\\\\\\\\\\\______/\\/\\\\\\____/\\\////\\\_\///___/\\/\\\\\\_______/\\\\\\\\______/\\\\\\\\__\/\\\\\\\\\\\/____\/\\\_______\/\\\_
-//_____\/\\\///////______\/\\\////\\\__\//\\\\\\\\\__/\\\_\/\\\////\\\____/\\\/////\\\___/\\\/////\\\_\/\\\//////\\\____\/\\\_______\/\\\_
-//______\/\\\_____________\/\\\__\//\\\__\///////\\\_\/\\\_\/\\\__\//\\\__/\\\\\\\\\\\___/\\\\\\\\\\\__\/\\\____\//\\\___\/\\\_______\/\\\_
-//_______\/\\\_____________\/\\\___\/\\\__/\\_____\\\_\/\\\_\/\\\___\/\\\_\//\\///////___\//\\///////___\/\\\_____\//\\\__\/\\\_______/\\\__
-//________\/\\\\\\\\\\\\\\\_\/\\\___\/\\\_\//\\\\\\\\__\/\\\_\/\\\___\/\\\__\//\\\\\\\\\\__\//\\\\\\\\\\_\/\\\______\//\\\_\/\\\\\\\\\\\\/___
-//_________\///////////////__\///____\///___\////////___\///__\///____\///____\//////////____\//////////__\///________\///__\////////////_____
-//______________________________________________________________________________________________________________________parker@engineerd.io____
 // SPDX-License-Identifier: MIT
-
 pragma solidity >=0.8.0 <0.9.0;
+
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Burnable.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "./Base64.sol";
-import "hardhat/console.sol";
-//ropsten smiling.eth
-//address 0xdf74136E00724Bf2BfAd6583d79F2a2A371Ca0B0
-//node 0xf2a487af97f360672bc1fd07ea792e607c1b727a35796a88fd4ac96359432c80
-//resolver 0x084b1c3C81545d370f3634392De611CaaBFf8148
+//import "hardhat/console.sol";
+
 abstract contract messengerImage {
     function buildImage(uint _tokenId, string memory message, address sender) external virtual view returns(string memory);
 }
 
+/**
+* @title jpegMe
+* @author royce.eth
+* @notice On Chain NFT Messenging App
+ */
 contract Messenger is ERC721, ERC721Burnable, Ownable {
-
+    
+    /**
+    * @notice Emmits an event when either mint function is called. Can be emitted without an actual NFT being minted.
+    * @param sender Sender of the Message
+    * @param to Receipient of the Message
+    * @param value The text body content of the message
+    * @param nft true if mint was called and a NFT was created/updated, false if mintEvent was called and no on-chain data altered
+     */
     event SentMessage(address indexed sender, address indexed to, string value, bool nft);
 
     using Strings for uint;
     using Counters for Counters.Counter;
     Counters.Counter private _tokenIdCounter;
-    bool public paused = false;
     mapping(address => Message) public addressToMessage;
     uint public stringLimit = 175; //like a tweet
     uint public fee;
-    address public genesisMetaAddress;
     address public metaAddress;
-    //enum messageStatus {active, read, deleted, archived }
-    uint public genesisLimit;
 
+    //Message struct is user centric rather than tokenId centric because each user can only have one message and it just gets updated.
     struct Message {
         bool optOut;
-        //messageStatus status;
         address sender;
         string value;
         uint tokenId;
-    }//data struct is user centric rather than tokenId centric because each user can only have one message and it just gets updated.
+    }
 
-    constructor() ERC721("onChainMsg", "OCM") {}
+    constructor() ERC721("jpegMe", "JEM") {}
 
+    /**
+    * @notice Create a mint event without actually minting an NFT
+     */
     function mintEvent(address _to, string memory _userText) public payable {
         require(addressToMessage[_to].optOut == false, "User has opted out of receiving messasges");
         emit SentMessage(msg.sender, _to, _userText, false);
     }
 
-    // public
+    /**
+    * @notice Mint a new NFT message or update an existing one, and emit the NFT event.
+     */
     function mint(address _to, string memory _userText) public payable {
         bytes memory strBytes = bytes(_userText);
         require(strBytes.length <= stringLimit, "String input exceeds message limit");
         require(addressToMessage[_to].optOut == false, "User has opted out of receiving messasges");
 
 
-        if (userHasNFT(_to) && !isGenesis(msg.sender) && msg.sender != owner()) {
+        if (userHasNFT(_to) && msg.sender != owner()) {
             require(msg.value >= fee, "eth value is below expected fee");
         }
 
@@ -82,81 +82,32 @@ contract Messenger is ERC721, ERC721Burnable, Ownable {
         emit SentMessage(msg.sender, _to, _userText, true);
     }
 
-    function _beforeTokenTransfer(address from, address _to, uint256 tokenId)
+    function _beforeTokenTransfer(address _from, address _to, uint256 tokenId)
         internal virtual override
     {
-        super._beforeTokenTransfer(from, _to, tokenId);
+        super._beforeTokenTransfer(_from, _to, tokenId);
         //if you transfer a message, transfer message to new user and update the from, delete senders message record
-        //console.log("tokenId exists", _exists(tokenId));
-        //console.log("current", _tokenIdCounter.current());
-        bool minting = (from == address(0)); //!_exists(tokenId); //if token doesn't already exist, its being minted
-
-        
+        bool minting = (_from == address(0)); //!_exists(tokenId); //if token doesn't already exist, its being minted
         
         //Case: User is transferring an existing NFT (didn't call mint) 
         if(!minting){
             //Case: User is transferring NFT to user who already has one and we will prevent them in case it overwites a genesis theme
             require(!userHasNFT(_to), "Wallet already has a Message and can only have one, please burn or transfer the old message first");
             //console.log("We are transferring a token that isn't being minted");
-            //console.log(ownerOf(tokenId));
-            //console.log(msg.sender);
-            //bool optOut = addressToMessage[to].optOut;
-            //addressToMessage[to] = addressToMessage[from];
-            //addressToMessage[to].optOut = optOut; 
-            addressToMessage[_to].tokenId = addressToMessage[from].tokenId;
+            //update tokenID in addressToMessage for new message owner
+            addressToMessage[_to].tokenId = addressToMessage[_from].tokenId;
 
-            bool optOut = addressToMessage[from].optOut;
-            delete addressToMessage[from]; // could delete old data, or leave it to me updated upon next mint. Leaving it will make transferring more expensive and mionting cheaper next time.
-            addressToMessage[from].optOut = optOut; 
-        }else {
-            //console.log("We are minting");
+            //remove old record but maintaing optout status
+            bool optOut = addressToMessage[_from].optOut;
+            delete addressToMessage[_from]; // could delete old data, or leave it to me updated upon next mint. Leaving it will make transferring more expensive and mionting cheaper next time.
+            addressToMessage[_from].optOut = optOut; 
         } 
-    }
-    
-    function increaseThemeLimit(uint _delta) external onlyOwner {
-        genesisLimit += _delta;
-    }
-
-    function updateStringLimit(uint _newLimit) external onlyOwner {
-        stringLimit = _newLimit;
-    }
-
-    function tokenSupply() public view returns(uint){
-        return _tokenIdCounter.current();
-    }
-
-    function updateFee(uint _fee) external onlyOwner {
-        fee = _fee;
-    }
-
-    function userHasNFT(address _to) public view returns(bool) {
-        return addressToMessage[_to].tokenId != 0;
-    }
-
-    function changeOptOut() public {
-        addressToMessage[msg.sender].optOut = !addressToMessage[msg.sender].optOut;
-        //burn(_tokenId);
-    }
-    
-    function setGenesisMetaAddress(address _metaAddress) external onlyOwner {
-        genesisMetaAddress =  _metaAddress;
-    }
-    
-    function setMetaAddress(address _metaAddress) external onlyOwner {
-        metaAddress =  _metaAddress;
-    }
-
-    function isGenesis(address _address) public view returns (bool) {
-        return (addressToMessage[_address].tokenId !=0 && addressToMessage[_address].tokenId <= genesisLimit);
     }
     
     function buildImage(uint256 _tokenId) private view returns (string memory) {
         Message memory currentMessage = addressToMessage[ownerOf(_tokenId)];
         //string memory owner = toAsciiString(currentMessage.sender);
         messengerImage mymessengerImage = messengerImage(metaAddress);
-        if(metaAddress == address(0) || isGenesis(msg.sender)){
-            mymessengerImage = messengerImage(genesisMetaAddress);
-        }
         return mymessengerImage.buildImage(_tokenId, currentMessage.value, currentMessage.sender);
     }
 
@@ -165,7 +116,6 @@ contract Messenger is ERC721, ERC721Burnable, Ownable {
         view
         returns (string memory)
     {
-        //Message memory currentMessage = wordsToTokenId[_tokenid];
         return
             string(
                 abi.encodePacked(
@@ -202,7 +152,30 @@ contract Messenger is ERC721, ERC721Burnable, Ownable {
         return buildMetadata(_tokenid);
     }
 
-    //only owner
+    function updateStringLimit(uint _newLimit) external onlyOwner {
+        stringLimit = _newLimit;
+    }
+
+    function tokenSupply() public view returns(uint){
+        return _tokenIdCounter.current();
+    }
+
+    function updateFee(uint _fee) external onlyOwner {
+        fee = _fee;
+    }
+
+    function userHasNFT(address _to) public view returns(bool) {
+        return addressToMessage[_to].tokenId != 0;
+    }
+
+    function changeOptOut() public {
+        addressToMessage[msg.sender].optOut = !addressToMessage[msg.sender].optOut;
+    }
+    
+    function setMetaAddress(address _metaAddress) external onlyOwner {
+        metaAddress =  _metaAddress;
+    }
+
     function withdraw() public payable onlyOwner {
         (bool success, ) = payable(msg.sender).call{
             value: address(this).balance

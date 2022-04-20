@@ -1,4 +1,3 @@
-import { Button, Col, Menu, Row } from "antd";
 import "antd/dist/antd.css";
 import {
   useBalance,
@@ -10,19 +9,13 @@ import {
 } from "eth-hooks";
 import { useExchangeEthPrice } from "eth-hooks/dapps/dex";
 import React, { useCallback, useEffect, useState } from "react";
-import { Link, Route, Switch, useLocation } from "react-router-dom";
+import { Route, Switch } from "react-router-dom";
 import "./App.css";
 import {
   Account,
-  Contract,
-  Faucet,
-  GasGauge,
   Header,
-  Ramp,
   ThemeSwitch,
-  MintSwitch,
   NetworkDisplay,
-  FaucetHint,
   NetworkSwitch,
 } from "./components";
 import { NETWORKS, ALCHEMY_KEY } from "./constants";
@@ -30,7 +23,7 @@ import externalContracts from "./contracts/external_contracts";
 // contracts
 import deployedContracts from "./contracts/hardhat_contracts.json";
 import { Transactor, Web3ModalSetup } from "./helpers";
-import { Home, AppUI, Hints, Subgraph } from "./views";
+import { Home, AppUI } from "./views";
 import { useStaticJsonRPC } from "./hooks";
 
 const { ethers } = require("ethers");
@@ -76,12 +69,9 @@ function App(props) {
   // specify all the chains your app is available on. Eg: ['localhost', 'mainnet', ...otherNetworks ]
   // reference './constants.js' for other networks
   const networkOptions = [initialNetwork.name, "mainnet", "rinkeby"];
-
   const [injectedProvider, setInjectedProvider] = useState();
   const [address, setAddress] = useState();
   const [selectedNetwork, setSelectedNetwork] = useState(networkOptions[0]);
-  const location = useLocation();
-
   const targetNetwork = NETWORKS[selectedNetwork];
 
   // 🔭 block explorer URL
@@ -243,8 +233,6 @@ function App(props) {
     }
   }, [loadWeb3Modal]);
 
-  const faucetAvailable = localProvider && localProvider.connection && targetNetwork.name.indexOf("local") !== -1;
-
   return (
     <div className="App">
       {/* ✏️ Edit the header and change the title to your project name */}
@@ -268,22 +256,16 @@ function App(props) {
             userSigner={userSigner}
             mainnetProvider={mainnetProvider}
             localProvider={localProvider}
-            yourLocalBalance={yourLocalBalance}
-            price={price}
             tx={tx}
             writeContracts={writeContracts}
             readContracts={readContracts}
-            //purpose={purpose}
           />
         </Route>
-        </Switch>
-          
-
+      </Switch>
       <ThemeSwitch />
-
       {/* 👨‍💼 Your account is in the top right with a wallet at connect options */}
       <div style={{ position: "fixed", textAlign: "right", right: 0, top: 0, padding: 10 }}>
-        <div style={{ display: "flex",  alignItems: "center", justifyContent:"space-around" }}>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-around" }}>
           {USE_NETWORK_SELECTOR && (
             <div style={{ marginRight: 20 }}>
               <NetworkSwitch
@@ -307,7 +289,6 @@ function App(props) {
           />
         </div>
       </div>
-
     </div>
   );
 }

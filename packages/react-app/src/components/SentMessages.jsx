@@ -1,4 +1,4 @@
-import { List, Button, space } from "antd";
+import { List } from "antd";
 import { useEventListener } from "eth-hooks/events/useEventListener";
 import { Address } from ".";
 import React, { useEffect, useState } from "react";
@@ -31,8 +31,8 @@ export default function SentMessages({ contracts, contractName, eventName, local
 
   useEffect(() => {
     const updateTimes = async () => {
-      const updateArray = async (myArray) => {
-         const promises = events.map(async (i) => {
+      const updateArray = async myArray => {
+         const promises = events.map(async i => {
             const newTime = (await i.getBlock()).timestamp;
             const dateTime = new Date(newTime *1000);
             return dateTime.toLocaleString();
@@ -51,7 +51,7 @@ export default function SentMessages({ contracts, contractName, eventName, local
     } catch (e) {
       console.log(e);
     }
-  }, [events]);
+  }, [events, eventCount]);
   
   return (
     <div className="messageList sentMessages" >
@@ -70,7 +70,7 @@ export default function SentMessages({ contracts, contractName, eventName, local
               actions={[
                 <Address address={item.args.to} ensProvider={mainnetProvider} fontSize={16} />,
                 <div>
-                  {dateTime? JSON.parse(dateTime)[index] : ""}
+                  {dateTime ? JSON.parse(dateTime)[index] : ""}
                 </div>,
               ]}
             >
