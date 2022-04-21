@@ -123,14 +123,14 @@ contract Messenger is ERC721, ERC721Burnable, Ownable {
                     Base64.encode(
                         bytes(
                             abi.encodePacked(
-                                '{"name":"Message #"',
+                                '{"name":"Message #',
                                 _tokenid.toString(),
-                                '", "description":"On Chain Messenger is a simple app that enables users to send wallet to wallet messages in visual NFT format, entirely on chain.",',
+                                '", "description":"JpegMe is a simple app that enables users to send wallet to wallet messages in visual NFT format, entirely on chain.",',
                                 '"image": "',
-                                "data:image/svg+xml;base64,",
+                                'data:image/svg+xml;base64,',
                                 buildImage(_tokenid),
-                                '"'
-                                "}"
+                                '"',
+                                '}'
                             )
                         )
                     )

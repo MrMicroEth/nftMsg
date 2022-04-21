@@ -108,6 +108,7 @@ describe("My Dapp", function () {
         expect(await messenger.ownerOf(3)).to.equal(accounts[1].address);
         await expect (messenger.ownerOf(1)).to.be.revertedWith("ERC721: owner query for nonexistent token");
         expect(await messenger.tokenSupply()).to.equal(3);
+        console.log(await messenger.tokenURI(2));
       });
     });
 
